@@ -1,92 +1,174 @@
 'use client'
 
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
-import { Progress } from '@/components/ui/progress'
+import { Button } from '@/components/ui/button'
 import { 
   Users, 
   Gamepad2, 
   Clock, 
   TrendingUp,
   Trophy,
-  Calendar,
-  AlertCircle
+  Plus,
+  UserPlus,
+  BarChart3,
+  ArrowUpRight,
+  ArrowDownRight,
+  Flame,
+  Target,
+  Zap,
+  Heart,
+  Moon,
+  Star,
+  RefreshCw
 } from 'lucide-react'
 import { 
   stats, 
   getTopFriends, 
   getRecentActivity, 
-  getInactiveFriends 
+  monthlySessionData,
+  gamesPlayedData,
+  activityHeatmapData,
+  activityTimeline,
+  weeklyStats
 } from '@/lib/mock-data'
 import Link from 'next/link'
+import {
+  AreaChart,
+  Area,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  Cell,
+  PieChart,
+  Pie,
+} from 'recharts'
 
 const topFriends = getTopFriends(5)
-const recentActivity = getRecentActivity(5)
-const inactiveFriends = getInactiveFriends(14)
+const recentActivity = getRecentActivity(4)
+
+const getTimelineIcon = (iconName: string) => {
+  switch (iconName) {
+    case 'trophy': return <Trophy className="w-4 h-4" />
+    case 'heart': return <Heart className="w-4 h-4" />
+    case 'moon': return <Moon className="w-4 h-4" />
+    case 'clock': return <Clock className="w-4 h-4" />
+    case 'star': return <Star className="w-4 h-4" />
+    case 'refresh': return <RefreshCw className="w-4 h-4" />
+    default: return <Zap className="w-4 h-4" />
+  }
+}
+
+const getTimelineColor = (type: string) => {
+  switch (type) {
+    case 'session': return 'bg-primary/20 text-primary'
+    case 'friend': return 'bg-pink-500/20 text-pink-500'
+    case 'achievement': return 'bg-amber-500/20 text-amber-500'
+    case 'milestone': return 'bg-accent/20 text-accent'
+    default: return 'bg-muted text-muted-foreground'
+  }
+}
+
+const DAYS = ['M', 'T', 'W', 'T', 'F', 'S', 'S']
 
 export default function DashboardPage() {
   return (
-    <div className="p-6 space-y-6">
-      {/* Page Header */}
-      <div>
-        <h1 className="text-2xl font-bold">Dashboard</h1>
-        <p className="text-muted-foreground">Welcome back, GamerUser! Here&apos;s your gaming overview.</p>
+    <div className="p-4 md:p-6 space-y-6">
+      {/* Page Header with Quick Actions */}
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div>
+          <h1 className="text-2xl md:text-3xl font-bold">Dashboard</h1>
+          <p className="text-muted-foreground">Welcome back, GamerUser! Here&apos;s your gaming analytics.</p>
+        </div>
+        <div className="flex gap-2">
+          <Button asChild variant="outline" className="gap-2">
+            <Link href="/dashboard/friends">
+              <UserPlus className="w-4 h-4" />
+              Add Friend
+            </Link>
+          </Button>
+          <Button asChild className="gap-2 gradient-primary border-0">
+            <Link href="/dashboard/add-session">
+              <Plus className="w-4 h-4" />
+              Log Session
+            </Link>
+          </Button>
+        </div>
       </div>
 
-      {/* Stats Grid */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <Card className="bg-card/50 border-border/50">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
+      {/* Stats Grid with Gaming Theme */}
+      <div className="grid gap-4 grid-cols-2 lg:grid-cols-4">
+        <Card className="bg-gradient-to-br from-card to-card/50 border-border/50 hover:border-primary/50 transition-all duration-300 group">
+          <CardContent className="p-5">
+            <div className="flex items-start justify-between">
               <div>
-                <p className="text-sm text-muted-foreground">Total Friends</p>
-                <p className="text-3xl font-bold">{stats.totalFriends}</p>
+                <p className="text-sm text-muted-foreground font-medium">Total Friends</p>
+                <p className="text-3xl font-bold mt-1">{stats.totalFriends}</p>
+                <div className="flex items-center gap-1 mt-2">
+                  <ArrowUpRight className="w-3 h-3 text-green-500" />
+                  <span className="text-xs text-green-500">+{weeklyStats.friendsPlayedChange} this week</span>
+                </div>
               </div>
-              <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center">
+              <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center group-hover:scale-110 transition-transform">
                 <Users className="w-6 h-6 text-primary" />
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="bg-card/50 border-border/50">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
+        <Card className="bg-gradient-to-br from-card to-card/50 border-border/50 hover:border-accent/50 transition-all duration-300 group">
+          <CardContent className="p-5">
+            <div className="flex items-start justify-between">
               <div>
-                <p className="text-sm text-muted-foreground">Total Sessions</p>
-                <p className="text-3xl font-bold">{stats.totalSessions}</p>
+                <p className="text-sm text-muted-foreground font-medium">Total Sessions</p>
+                <p className="text-3xl font-bold mt-1">{stats.totalSessions}</p>
+                <div className="flex items-center gap-1 mt-2">
+                  <ArrowUpRight className="w-3 h-3 text-green-500" />
+                  <span className="text-xs text-green-500">+{weeklyStats.sessionsChange}% vs last week</span>
+                </div>
               </div>
-              <div className="w-12 h-12 rounded-lg bg-accent/10 flex items-center justify-center">
+              <div className="w-12 h-12 rounded-xl bg-accent/10 flex items-center justify-center group-hover:scale-110 transition-transform">
                 <Gamepad2 className="w-6 h-6 text-accent" />
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="bg-card/50 border-border/50">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
+        <Card className="bg-gradient-to-br from-card to-card/50 border-border/50 hover:border-chart-3/50 transition-all duration-300 group">
+          <CardContent className="p-5">
+            <div className="flex items-start justify-between">
               <div>
-                <p className="text-sm text-muted-foreground">Total Hours</p>
-                <p className="text-3xl font-bold">{stats.totalHours}</p>
+                <p className="text-sm text-muted-foreground font-medium">Total Hours</p>
+                <p className="text-3xl font-bold mt-1">{stats.totalHours.toLocaleString()}</p>
+                <div className="flex items-center gap-1 mt-2">
+                  <ArrowUpRight className="w-3 h-3 text-green-500" />
+                  <span className="text-xs text-green-500">+{weeklyStats.hoursChange}% vs last week</span>
+                </div>
               </div>
-              <div className="w-12 h-12 rounded-lg bg-chart-3/10 flex items-center justify-center">
+              <div className="w-12 h-12 rounded-xl bg-chart-3/10 flex items-center justify-center group-hover:scale-110 transition-transform">
                 <Clock className="w-6 h-6 text-chart-3" />
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="bg-card/50 border-border/50">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
+        <Card className="bg-gradient-to-br from-card to-card/50 border-border/50 hover:border-chart-4/50 transition-all duration-300 group">
+          <CardContent className="p-5">
+            <div className="flex items-start justify-between">
               <div>
-                <p className="text-sm text-muted-foreground">This Week</p>
-                <p className="text-3xl font-bold">{stats.thisWeekSessions}</p>
-                <p className="text-xs text-muted-foreground">sessions</p>
+                <p className="text-sm text-muted-foreground font-medium">This Week</p>
+                <p className="text-3xl font-bold mt-1">{stats.thisWeekSessions}</p>
+                <div className="flex items-center gap-1 mt-2">
+                  <Flame className="w-3 h-3 text-orange-500" />
+                  <span className="text-xs text-orange-500">Hot streak!</span>
+                </div>
               </div>
-              <div className="w-12 h-12 rounded-lg bg-chart-4/10 flex items-center justify-center">
+              <div className="w-12 h-12 rounded-xl bg-chart-4/10 flex items-center justify-center group-hover:scale-110 transition-transform">
                 <TrendingUp className="w-6 h-6 text-chart-4" />
               </div>
             </div>
@@ -94,167 +176,379 @@ export default function DashboardPage() {
         </Card>
       </div>
 
-      {/* Main Content Grid */}
-      <div className="grid gap-6 lg:grid-cols-2">
-        {/* Friend Ranking Card */}
-        <Card className="bg-card/50 border-border/50">
-          <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle className="flex items-center gap-2">
-              <Trophy className="w-5 h-5 text-primary" />
-              Top Friends
-            </CardTitle>
-            <Link href="/dashboard/rankings" className="text-sm text-primary hover:underline">
-              View All
-            </Link>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            {topFriends.map((friend, index) => (
-              <div key={friend.id} className="flex items-center gap-4">
-                <div className={`
-                  w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold
-                  ${index === 0 ? 'bg-yellow-500/20 text-yellow-500' : ''}
-                  ${index === 1 ? 'bg-gray-400/20 text-gray-400' : ''}
-                  ${index === 2 ? 'bg-orange-500/20 text-orange-500' : ''}
-                  ${index > 2 ? 'bg-muted text-muted-foreground' : ''}
-                `}>
-                  #{index + 1}
-                </div>
-                <Avatar className="w-10 h-10">
-                  <AvatarImage src={friend.avatar} />
-                  <AvatarFallback>{friend.name.slice(0, 2)}</AvatarFallback>
-                </Avatar>
-                <div className="flex-1 min-w-0">
-                  <p className="font-medium truncate">{friend.name}</p>
-                  <p className="text-xs text-muted-foreground">{friend.favoriteGame}</p>
-                </div>
-                <div className="text-right">
-                  <p className="font-semibold">{friend.playCount}</p>
-                  <p className="text-xs text-muted-foreground">sessions</p>
-                </div>
+      {/* Main Charts Row */}
+      <div className="grid gap-6 lg:grid-cols-7">
+        {/* Monthly Play Sessions Chart - Larger */}
+        <Card className="lg:col-span-4 bg-card/50 border-border/50">
+          <CardHeader className="pb-2">
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle className="flex items-center gap-2 text-lg">
+                  <BarChart3 className="w-5 h-5 text-primary" />
+                  Monthly Activity
+                </CardTitle>
+                <CardDescription>Sessions and hours over the last 6 months</CardDescription>
               </div>
-            ))}
+              <Badge variant="secondary" className="text-xs">
+                <TrendingUp className="w-3 h-3 mr-1" />
+                +23%
+              </Badge>
+            </div>
+          </CardHeader>
+          <CardContent className="pt-4">
+            <div className="h-[280px]">
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart data={monthlySessionData}>
+                  <defs>
+                    <linearGradient id="colorSessions" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="oklch(0.65 0.2 270)" stopOpacity={0.3}/>
+                      <stop offset="95%" stopColor="oklch(0.65 0.2 270)" stopOpacity={0}/>
+                    </linearGradient>
+                    <linearGradient id="colorHours" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="oklch(0.75 0.15 195)" stopOpacity={0.3}/>
+                      <stop offset="95%" stopColor="oklch(0.75 0.15 195)" stopOpacity={0}/>
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" stroke="oklch(0.28 0.02 280)" vertical={false} />
+                  <XAxis 
+                    dataKey="month" 
+                    stroke="oklch(0.65 0 0)" 
+                    fontSize={12}
+                    tickLine={false}
+                    axisLine={false}
+                  />
+                  <YAxis 
+                    stroke="oklch(0.65 0 0)" 
+                    fontSize={12}
+                    tickLine={false}
+                    axisLine={false}
+                  />
+                  <Tooltip 
+                    contentStyle={{ 
+                      backgroundColor: 'oklch(0.16 0.01 280)', 
+                      border: '1px solid oklch(0.28 0.02 280)',
+                      borderRadius: '8px',
+                      color: 'oklch(0.95 0 0)'
+                    }}
+                  />
+                  <Area 
+                    type="monotone" 
+                    dataKey="sessions" 
+                    stroke="oklch(0.65 0.2 270)" 
+                    strokeWidth={2}
+                    fillOpacity={1} 
+                    fill="url(#colorSessions)" 
+                    name="Sessions"
+                  />
+                  <Area 
+                    type="monotone" 
+                    dataKey="hours" 
+                    stroke="oklch(0.75 0.15 195)" 
+                    strokeWidth={2}
+                    fillOpacity={1} 
+                    fill="url(#colorHours)" 
+                    name="Hours"
+                  />
+                </AreaChart>
+              </ResponsiveContainer>
+            </div>
           </CardContent>
         </Card>
 
-        {/* Recent Activity Card */}
-        <Card className="bg-card/50 border-border/50">
-          <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle className="flex items-center gap-2">
-              <Calendar className="w-5 h-5 text-accent" />
-              Recent Activity
-            </CardTitle>
-            <Link href="/dashboard/friends" className="text-sm text-primary hover:underline">
-              View All
-            </Link>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            {recentActivity.map((session) => (
-              <div key={session.id} className="flex items-center gap-4">
-                <div className="w-10 h-10 rounded-lg bg-secondary flex items-center justify-center">
-                  <Gamepad2 className="w-5 h-5 text-muted-foreground" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="font-medium truncate">
-                    Played with <span className="text-primary">{session.friendName}</span>
-                  </p>
-                  <p className="text-xs text-muted-foreground">{session.game}</p>
-                </div>
-                <div className="text-right">
-                  <p className="text-sm">{session.duration} min</p>
-                  <p className="text-xs text-muted-foreground">{session.date}</p>
-                </div>
+        {/* Most Played Games Chart */}
+        <Card className="lg:col-span-3 bg-card/50 border-border/50">
+          <CardHeader className="pb-2">
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle className="flex items-center gap-2 text-lg">
+                  <Target className="w-5 h-5 text-accent" />
+                  Most Played Games
+                </CardTitle>
+                <CardDescription>Top games by hours played</CardDescription>
               </div>
-            ))}
+            </div>
+          </CardHeader>
+          <CardContent className="pt-4">
+            <div className="h-[180px] mb-4">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={gamesPlayedData} layout="vertical">
+                  <CartesianGrid strokeDasharray="3 3" stroke="oklch(0.28 0.02 280)" horizontal={false} />
+                  <XAxis type="number" stroke="oklch(0.65 0 0)" fontSize={10} tickLine={false} axisLine={false} />
+                  <YAxis 
+                    type="category" 
+                    dataKey="name" 
+                    stroke="oklch(0.65 0 0)" 
+                    fontSize={11}
+                    tickLine={false}
+                    axisLine={false}
+                    width={90}
+                  />
+                  <Tooltip 
+                    contentStyle={{ 
+                      backgroundColor: 'oklch(0.16 0.01 280)', 
+                      border: '1px solid oklch(0.28 0.02 280)',
+                      borderRadius: '8px',
+                      color: 'oklch(0.95 0 0)'
+                    }}
+                    formatter={(value: number) => [`${value}h`, 'Hours']}
+                  />
+                  <Bar dataKey="hours" radius={[0, 4, 4, 0]}>
+                    {gamesPlayedData.map((entry, index) => (
+                      <Cell 
+                        key={`cell-${index}`} 
+                        fill={`oklch(${0.65 + index * 0.02} ${0.2 - index * 0.02} ${270 + index * 20})`}
+                      />
+                    ))}
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {gamesPlayedData.slice(0, 3).map((game, index) => (
+                <Badge key={game.name} variant="secondary" className="text-xs">
+                  #{index + 1} {game.name}
+                </Badge>
+              ))}
+            </div>
           </CardContent>
         </Card>
       </div>
 
-      {/* Bottom Section */}
-      <div className="grid gap-6 lg:grid-cols-3">
-        {/* Inactive Friends */}
-        <Card className="bg-card/50 border-border/50 lg:col-span-2">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <AlertCircle className="w-5 h-5 text-destructive" />
-              Inactive Friends
-              <Badge variant="secondary" className="ml-2">{inactiveFriends.length}</Badge>
-            </CardTitle>
+      {/* Middle Row - Leaderboard, Timeline, Heatmap */}
+      <div className="grid gap-6 lg:grid-cols-12">
+        {/* Friend Ranking Leaderboard */}
+        <Card className="lg:col-span-4 bg-card/50 border-border/50">
+          <CardHeader className="pb-2">
+            <div className="flex items-center justify-between">
+              <CardTitle className="flex items-center gap-2 text-lg">
+                <Trophy className="w-5 h-5 text-yellow-500" />
+                Friend Leaderboard
+              </CardTitle>
+              <Link href="/dashboard/rankings" className="text-xs text-primary hover:underline">
+                View All
+              </Link>
+            </div>
           </CardHeader>
-          <CardContent>
-            {inactiveFriends.length > 0 ? (
-              <div className="space-y-3">
-                {inactiveFriends.map((friend) => (
-                  <div key={friend.id} className="flex items-center gap-4 p-3 rounded-lg bg-secondary/50">
-                    <Avatar className="w-10 h-10">
-                      <AvatarImage src={friend.avatar} />
-                      <AvatarFallback>{friend.name.slice(0, 2)}</AvatarFallback>
-                    </Avatar>
-                    <div className="flex-1 min-w-0">
-                      <p className="font-medium truncate">{friend.name}</p>
-                      <p className="text-xs text-muted-foreground">
-                        Last played: {friend.lastPlayed}
-                      </p>
-                    </div>
-                    <Link 
-                      href="/dashboard/add-session" 
-                      className="text-sm text-primary hover:underline"
-                    >
-                      Play now
-                    </Link>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <p className="text-muted-foreground text-center py-8">
-                All your friends are active! Great job staying connected.
-              </p>
-            )}
+          <CardContent className="space-y-3">
+            {topFriends.map((friend, index) => (
+              <Link 
+                key={friend.id} 
+                href={`/dashboard/friends/${friend.id}`}
+                className="flex items-center gap-3 p-2 rounded-lg hover:bg-secondary/50 transition-colors group"
+              >
+                <div className={`
+                  w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold shrink-0
+                  ${index === 0 ? 'bg-gradient-to-br from-yellow-400 to-yellow-600 text-black' : ''}
+                  ${index === 1 ? 'bg-gradient-to-br from-gray-300 to-gray-500 text-black' : ''}
+                  ${index === 2 ? 'bg-gradient-to-br from-orange-400 to-orange-600 text-black' : ''}
+                  ${index > 2 ? 'bg-muted text-muted-foreground' : ''}
+                `}>
+                  {index + 1}
+                </div>
+                <Avatar className="w-9 h-9 border-2 border-transparent group-hover:border-primary/50 transition-colors">
+                  <AvatarImage src={friend.avatar} />
+                  <AvatarFallback>{friend.name.slice(0, 2)}</AvatarFallback>
+                </Avatar>
+                <div className="flex-1 min-w-0">
+                  <p className="font-medium text-sm truncate group-hover:text-primary transition-colors">{friend.name}</p>
+                  <p className="text-xs text-muted-foreground truncate">{friend.favoriteGame}</p>
+                </div>
+                <div className="text-right shrink-0">
+                  <p className="font-bold text-sm">{friend.playCount}</p>
+                  <p className="text-[10px] text-muted-foreground">sessions</p>
+                </div>
+              </Link>
+            ))}
           </CardContent>
         </Card>
 
-        {/* Favorite Game Stats */}
-        <Card className="bg-card/50 border-border/50">
-          <CardHeader>
-            <CardTitle className="text-lg">Favorite Game</CardTitle>
+        {/* Activity Timeline */}
+        <Card className="lg:col-span-4 bg-card/50 border-border/50">
+          <CardHeader className="pb-2">
+            <CardTitle className="flex items-center gap-2 text-lg">
+              <Zap className="w-5 h-5 text-amber-500" />
+              Activity Timeline
+            </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="text-center py-4">
-              <div className="w-16 h-16 rounded-xl gradient-primary mx-auto flex items-center justify-center mb-3">
-                <Gamepad2 className="w-8 h-8 text-primary-foreground" />
-              </div>
-              <p className="text-xl font-bold">{stats.favoriteGame}</p>
-              <p className="text-sm text-muted-foreground">Most played game</p>
+          <CardContent>
+            <div className="space-y-4">
+              {activityTimeline.slice(0, 5).map((event, index) => (
+                <div key={event.id} className="flex gap-3">
+                  <div className="relative flex flex-col items-center">
+                    <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${getTimelineColor(event.type)}`}>
+                      {getTimelineIcon(event.icon)}
+                    </div>
+                    {index < activityTimeline.slice(0, 5).length - 1 && (
+                      <div className="w-px h-full bg-border absolute top-8 left-1/2 -translate-x-1/2" />
+                    )}
+                  </div>
+                  <div className="pb-4 flex-1 min-w-0">
+                    <p className="font-medium text-sm">{event.title}</p>
+                    <p className="text-xs text-muted-foreground truncate">{event.description}</p>
+                    <p className="text-[10px] text-muted-foreground/70 mt-1">{event.time}</p>
+                  </div>
+                </div>
+              ))}
             </div>
+          </CardContent>
+        </Card>
+
+        {/* Activity Heatmap */}
+        <Card className="lg:col-span-4 bg-card/50 border-border/50">
+          <CardHeader className="pb-2">
+            <div className="flex items-center justify-between">
+              <CardTitle className="flex items-center gap-2 text-lg">
+                <Flame className="w-5 h-5 text-orange-500" />
+                Activity Heatmap
+              </CardTitle>
+              <span className="text-xs text-muted-foreground">Last 12 weeks</span>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="flex gap-1 mb-2">
+              <div className="w-6" />
+              {Array.from({ length: 12 }).map((_, i) => (
+                <div key={i} className="w-5 text-center text-[9px] text-muted-foreground">
+                  {i + 1}
+                </div>
+              ))}
+            </div>
+            {DAYS.map((day, dayIndex) => (
+              <div key={dayIndex} className="flex gap-1 mb-1">
+                <div className="w-6 text-[10px] text-muted-foreground flex items-center">{day}</div>
+                {Array.from({ length: 12 }).map((_, weekIndex) => {
+                  const data = activityHeatmapData.find(d => d.week === weekIndex && d.day === dayIndex)
+                  const sessions = data?.sessions || 0
+                  const opacity = sessions === 0 ? 0.1 : Math.min(0.2 + sessions * 0.12, 1)
+                  return (
+                    <div
+                      key={weekIndex}
+                      className="w-5 h-5 rounded-sm transition-all duration-200 hover:scale-125 hover:z-10 cursor-pointer"
+                      style={{ 
+                        backgroundColor: sessions === 0 
+                          ? 'oklch(0.22 0.01 280)' 
+                          : `oklch(0.65 0.2 270 / ${opacity})`
+                      }}
+                      title={`Week ${weekIndex + 1}, ${['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'][dayIndex]}: ${sessions} sessions`}
+                    />
+                  )
+                })}
+              </div>
+            ))}
+            <div className="flex items-center justify-end gap-2 mt-3">
+              <span className="text-[10px] text-muted-foreground">Less</span>
+              {[0.1, 0.3, 0.5, 0.7, 1].map((opacity, i) => (
+                <div
+                  key={i}
+                  className="w-3 h-3 rounded-sm"
+                  style={{ backgroundColor: `oklch(0.65 0.2 270 / ${opacity})` }}
+                />
+              ))}
+              <span className="text-[10px] text-muted-foreground">More</span>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Bottom Row - Recent Sessions & Quick Actions */}
+      <div className="grid gap-6 lg:grid-cols-3">
+        {/* Recent Sessions */}
+        <Card className="lg:col-span-2 bg-card/50 border-border/50">
+          <CardHeader className="pb-2">
+            <div className="flex items-center justify-between">
+              <CardTitle className="flex items-center gap-2 text-lg">
+                <Gamepad2 className="w-5 h-5 text-accent" />
+                Recent Sessions
+              </CardTitle>
+              <Link href="/dashboard/friends" className="text-xs text-primary hover:underline">
+                View All
+              </Link>
+            </div>
+          </CardHeader>
+          <CardContent>
             <div className="space-y-3">
-              <div>
-                <div className="flex justify-between text-sm mb-1">
-                  <span>Valorant</span>
-                  <span className="text-muted-foreground">45%</span>
+              {recentActivity.map((session) => (
+                <div 
+                  key={session.id} 
+                  className="flex items-center gap-4 p-3 rounded-xl bg-secondary/30 hover:bg-secondary/50 transition-colors"
+                >
+                  <div className="w-12 h-12 rounded-xl gradient-primary flex items-center justify-center shrink-0">
+                    <Gamepad2 className="w-6 h-6 text-primary-foreground" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="font-medium text-sm">
+                      Played <span className="text-primary">{session.game}</span>
+                    </p>
+                    <p className="text-xs text-muted-foreground">with {session.friendName}</p>
+                  </div>
+                  <div className="text-right shrink-0">
+                    <Badge variant="outline" className="text-xs">
+                      {session.duration} min
+                    </Badge>
+                    <p className="text-[10px] text-muted-foreground mt-1">{session.date}</p>
+                  </div>
                 </div>
-                <Progress value={45} className="h-2" />
-              </div>
-              <div>
-                <div className="flex justify-between text-sm mb-1">
-                  <span>League of Legends</span>
-                  <span className="text-muted-foreground">30%</span>
-                </div>
-                <Progress value={30} className="h-2" />
-              </div>
-              <div>
-                <div className="flex justify-between text-sm mb-1">
-                  <span>Apex Legends</span>
-                  <span className="text-muted-foreground">15%</span>
-                </div>
-                <Progress value={15} className="h-2" />
-              </div>
-              <div>
-                <div className="flex justify-between text-sm mb-1">
-                  <span>Others</span>
-                  <span className="text-muted-foreground">10%</span>
-                </div>
-                <Progress value={10} className="h-2" />
-              </div>
+              ))}
             </div>
+          </CardContent>
+        </Card>
+
+        {/* Quick Actions */}
+        <Card className="bg-card/50 border-border/50">
+          <CardHeader className="pb-2">
+            <CardTitle className="flex items-center gap-2 text-lg">
+              <Zap className="w-5 h-5 text-primary" />
+              Quick Actions
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            <Button asChild variant="outline" className="w-full justify-start gap-3 h-12 hover:border-primary/50 hover:bg-primary/5">
+              <Link href="/dashboard/add-session">
+                <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
+                  <Plus className="w-4 h-4 text-primary" />
+                </div>
+                <div className="text-left">
+                  <p className="font-medium text-sm">Log New Session</p>
+                  <p className="text-[10px] text-muted-foreground">Record your gaming time</p>
+                </div>
+              </Link>
+            </Button>
+            
+            <Button asChild variant="outline" className="w-full justify-start gap-3 h-12 hover:border-accent/50 hover:bg-accent/5">
+              <Link href="/dashboard/friends">
+                <div className="w-8 h-8 rounded-lg bg-accent/10 flex items-center justify-center">
+                  <UserPlus className="w-4 h-4 text-accent" />
+                </div>
+                <div className="text-left">
+                  <p className="font-medium text-sm">Add New Friend</p>
+                  <p className="text-[10px] text-muted-foreground">Grow your network</p>
+                </div>
+              </Link>
+            </Button>
+            
+            <Button asChild variant="outline" className="w-full justify-start gap-3 h-12 hover:border-yellow-500/50 hover:bg-yellow-500/5">
+              <Link href="/dashboard/rankings">
+                <div className="w-8 h-8 rounded-lg bg-yellow-500/10 flex items-center justify-center">
+                  <Trophy className="w-4 h-4 text-yellow-500" />
+                </div>
+                <div className="text-left">
+                  <p className="font-medium text-sm">View Rankings</p>
+                  <p className="text-[10px] text-muted-foreground">See who you play most</p>
+                </div>
+              </Link>
+            </Button>
+            
+            <Button asChild variant="outline" className="w-full justify-start gap-3 h-12 hover:border-chart-3/50 hover:bg-chart-3/5">
+              <Link href="/dashboard/network">
+                <div className="w-8 h-8 rounded-lg bg-chart-3/10 flex items-center justify-center">
+                  <BarChart3 className="w-4 h-4 text-chart-3" />
+                </div>
+                <div className="text-left">
+                  <p className="font-medium text-sm">Network View</p>
+                  <p className="text-[10px] text-muted-foreground">Visualize connections</p>
+                </div>
+              </Link>
+            </Button>
           </CardContent>
         </Card>
       </div>

@@ -218,3 +218,69 @@ export function getInactiveFriends(daysSinceLastPlay: number = 14): Friend[] {
   cutoffDate.setDate(cutoffDate.getDate() - daysSinceLastPlay)
   return friends.filter(f => new Date(f.lastPlayed) < cutoffDate)
 }
+
+// Monthly play session data for charts
+export const monthlySessionData = [
+  { month: 'Aug', sessions: 18, hours: 42 },
+  { month: 'Sep', sessions: 24, hours: 58 },
+  { month: 'Oct', sessions: 31, hours: 76 },
+  { month: 'Nov', sessions: 28, hours: 65 },
+  { month: 'Dec', sessions: 35, hours: 89 },
+  { month: 'Jan', sessions: 42, hours: 98 },
+]
+
+// Most played games data
+export const gamesPlayedData = [
+  { name: 'Valorant', hours: 342, sessions: 89, color: 'hsl(var(--chart-1))' },
+  { name: 'League of Legends', hours: 289, sessions: 72, color: 'hsl(var(--chart-2))' },
+  { name: 'Apex Legends', hours: 198, sessions: 54, color: 'hsl(var(--chart-3))' },
+  { name: 'CS2', hours: 156, sessions: 41, color: 'hsl(var(--chart-4))' },
+  { name: 'Rocket League', hours: 112, sessions: 32, color: 'hsl(var(--chart-5))' },
+]
+
+// Activity heatmap data (last 12 weeks)
+export const activityHeatmapData = [
+  // Week 1-12, Mon-Sun
+  { week: 0, day: 0, sessions: 2 }, { week: 0, day: 1, sessions: 0 }, { week: 0, day: 2, sessions: 3 }, 
+  { week: 0, day: 3, sessions: 1 }, { week: 0, day: 4, sessions: 4 }, { week: 0, day: 5, sessions: 5 }, { week: 0, day: 6, sessions: 3 },
+  { week: 1, day: 0, sessions: 1 }, { week: 1, day: 1, sessions: 2 }, { week: 1, day: 2, sessions: 0 }, 
+  { week: 1, day: 3, sessions: 3 }, { week: 1, day: 4, sessions: 2 }, { week: 1, day: 5, sessions: 6 }, { week: 1, day: 6, sessions: 4 },
+  { week: 2, day: 0, sessions: 0 }, { week: 2, day: 1, sessions: 1 }, { week: 2, day: 2, sessions: 2 }, 
+  { week: 2, day: 3, sessions: 0 }, { week: 2, day: 4, sessions: 3 }, { week: 2, day: 5, sessions: 5 }, { week: 2, day: 6, sessions: 2 },
+  { week: 3, day: 0, sessions: 2 }, { week: 3, day: 1, sessions: 3 }, { week: 3, day: 2, sessions: 1 }, 
+  { week: 3, day: 3, sessions: 4 }, { week: 3, day: 4, sessions: 2 }, { week: 3, day: 5, sessions: 7 }, { week: 3, day: 6, sessions: 5 },
+  { week: 4, day: 0, sessions: 1 }, { week: 4, day: 1, sessions: 0 }, { week: 4, day: 2, sessions: 2 }, 
+  { week: 4, day: 3, sessions: 1 }, { week: 4, day: 4, sessions: 3 }, { week: 4, day: 5, sessions: 4 }, { week: 4, day: 6, sessions: 3 },
+  { week: 5, day: 0, sessions: 3 }, { week: 5, day: 1, sessions: 2 }, { week: 5, day: 2, sessions: 4 }, 
+  { week: 5, day: 3, sessions: 2 }, { week: 5, day: 4, sessions: 5 }, { week: 5, day: 5, sessions: 8 }, { week: 5, day: 6, sessions: 6 },
+  { week: 6, day: 0, sessions: 2 }, { week: 6, day: 1, sessions: 1 }, { week: 6, day: 2, sessions: 0 }, 
+  { week: 6, day: 3, sessions: 3 }, { week: 6, day: 4, sessions: 4 }, { week: 6, day: 5, sessions: 6 }, { week: 6, day: 6, sessions: 4 },
+  { week: 7, day: 0, sessions: 1 }, { week: 7, day: 1, sessions: 2 }, { week: 7, day: 2, sessions: 3 }, 
+  { week: 7, day: 3, sessions: 1 }, { week: 7, day: 4, sessions: 2 }, { week: 7, day: 5, sessions: 5 }, { week: 7, day: 6, sessions: 3 },
+  { week: 8, day: 0, sessions: 0 }, { week: 8, day: 1, sessions: 1 }, { week: 8, day: 2, sessions: 2 }, 
+  { week: 8, day: 3, sessions: 4 }, { week: 8, day: 4, sessions: 3 }, { week: 8, day: 5, sessions: 7 }, { week: 8, day: 6, sessions: 5 },
+  { week: 9, day: 0, sessions: 2 }, { week: 9, day: 1, sessions: 0 }, { week: 9, day: 2, sessions: 1 }, 
+  { week: 9, day: 3, sessions: 2 }, { week: 9, day: 4, sessions: 4 }, { week: 9, day: 5, sessions: 6 }, { week: 9, day: 6, sessions: 4 },
+  { week: 10, day: 0, sessions: 3 }, { week: 10, day: 1, sessions: 2 }, { week: 10, day: 2, sessions: 3 }, 
+  { week: 10, day: 3, sessions: 5 }, { week: 10, day: 4, sessions: 4 }, { week: 10, day: 5, sessions: 8 }, { week: 10, day: 6, sessions: 6 },
+  { week: 11, day: 0, sessions: 2 }, { week: 11, day: 1, sessions: 3 }, { week: 11, day: 2, sessions: 4 }, 
+  { week: 11, day: 3, sessions: 3 }, { week: 11, day: 4, sessions: 5 }, { week: 11, day: 5, sessions: 9 }, { week: 11, day: 6, sessions: 7 },
+]
+
+// Activity timeline events
+export const activityTimeline = [
+  { id: 1, type: 'session', title: 'Epic Valorant Win', description: 'Won ranked match with NightWolf_X', time: '2 hours ago', icon: 'trophy' },
+  { id: 2, type: 'friend', title: 'New Best Friend', description: 'CyberPhoenix reached 100+ sessions with you', time: '5 hours ago', icon: 'heart' },
+  { id: 3, type: 'achievement', title: 'Night Owl', description: 'Played 5 sessions after midnight this week', time: '1 day ago', icon: 'moon' },
+  { id: 4, type: 'session', title: 'Marathon Session', description: '4+ hours gaming with ShadowBlade', time: '2 days ago', icon: 'clock' },
+  { id: 5, type: 'milestone', title: '1000 Hours', description: 'You reached 1000 total gaming hours!', time: '3 days ago', icon: 'star' },
+  { id: 6, type: 'friend', title: 'Reconnected', description: 'Played with IceStorm42 after 2 weeks', time: '4 days ago', icon: 'refresh' },
+]
+
+// Weekly comparison stats
+export const weeklyStats = {
+  sessionsChange: 23,
+  hoursChange: 15,
+  friendsPlayedChange: 2,
+  newGamesPlayed: 1,
+}
