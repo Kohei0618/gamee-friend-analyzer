@@ -57,7 +57,7 @@ function NetworkVisualization() {
     ctx.font = 'bold 12px sans-serif'
     ctx.textAlign = 'center'
     ctx.textBaseline = 'middle'
-    ctx.fillText('You', centerX, centerY)
+    ctx.fillText('自分', centerX, centerY)
 
     // Draw friend nodes and connections
     friends.slice(0, numFriends).forEach((friend, index) => {
@@ -125,8 +125,8 @@ export default function NetworkPage() {
     <div className="p-6 space-y-6">
       {/* Page Header */}
       <div>
-        <h1 className="text-2xl font-bold">Network View</h1>
-        <p className="text-muted-foreground">Visualize your gaming friend relationships</p>
+        <h1 className="text-2xl font-bold">関係図</h1>
+        <p className="text-muted-foreground">ゲームフレンドとの関係を可視化</p>
       </div>
 
       {/* Network Visualization */}
@@ -134,10 +134,10 @@ export default function NetworkPage() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Network className="w-5 h-5 text-primary" />
-            Friend Network
+            フレンドネットワーク
           </CardTitle>
           <CardDescription>
-            The size and opacity of connections represent how often you play together
+            接続の太さと透明度は一緒にプレイする頻度を表しています
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -155,7 +155,7 @@ export default function NetworkPage() {
               </div>
               <div>
                 <p className="text-2xl font-bold">{friends.length}</p>
-                <p className="text-sm text-muted-foreground">Total Connections</p>
+                <p className="text-sm text-muted-foreground">総接続数</p>
               </div>
             </div>
           </CardContent>
@@ -171,7 +171,7 @@ export default function NetworkPage() {
                 <p className="text-2xl font-bold">
                   {friends.filter(f => f.status === 'online' || f.status === 'in-game').length}
                 </p>
-                <p className="text-sm text-muted-foreground">Active Now</p>
+                <p className="text-sm text-muted-foreground">現在アクティブ</p>
               </div>
             </div>
           </CardContent>
@@ -185,7 +185,7 @@ export default function NetworkPage() {
               </div>
               <div>
                 <p className="text-2xl font-bold">12</p>
-                <p className="text-sm text-muted-foreground">Mutual Connections</p>
+                <p className="text-sm text-muted-foreground">共通の接続</p>
               </div>
             </div>
           </CardContent>
@@ -199,29 +199,29 @@ export default function NetworkPage() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-base">
               <Info className="w-4 h-4" />
-              Legend
+              凡例
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
             <div className="flex items-center gap-3">
               <div className="w-4 h-4 rounded-full bg-green-500" />
-              <span className="text-sm">Online</span>
+              <span className="text-sm">オンライン</span>
             </div>
             <div className="flex items-center gap-3">
               <div className="w-4 h-4 rounded-full bg-primary" />
-              <span className="text-sm">In Game</span>
+              <span className="text-sm">ゲーム中</span>
             </div>
             <div className="flex items-center gap-3">
               <div className="w-4 h-4 rounded-full bg-muted-foreground" />
-              <span className="text-sm">Offline</span>
+              <span className="text-sm">オフライン</span>
             </div>
             <div className="flex items-center gap-3 pt-2 border-t border-border">
               <div className="w-8 h-1 bg-primary/60 rounded" />
-              <span className="text-sm text-muted-foreground">Strong connection</span>
+              <span className="text-sm text-muted-foreground">強い接続</span>
             </div>
             <div className="flex items-center gap-3">
               <div className="w-8 h-[2px] bg-primary/30 rounded" />
-              <span className="text-sm text-muted-foreground">Weak connection</span>
+              <span className="text-sm text-muted-foreground">弱い接続</span>
             </div>
           </CardContent>
         </Card>
@@ -231,7 +231,7 @@ export default function NetworkPage() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Users className="w-5 h-5 text-accent" />
-              Network Members
+              ネットワークメンバー
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -255,10 +255,10 @@ export default function NetworkPage() {
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="font-medium truncate">{friend.name}</p>
-                    <p className="text-xs text-muted-foreground">{friend.playCount} sessions</p>
+                    <p className="text-xs text-muted-foreground">{friend.playCount} セッション</p>
                   </div>
                   <Badge variant="secondary" className="text-xs">
-                    {friend.status === 'online' ? 'Online' : friend.status === 'in-game' ? 'Playing' : 'Offline'}
+                    {friend.status === 'online' ? 'オンライン' : friend.status === 'in-game' ? 'プレイ中' : 'オフライン'}
                   </Badge>
                 </Link>
               ))}

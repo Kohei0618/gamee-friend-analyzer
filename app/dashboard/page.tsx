@@ -14,7 +14,6 @@ import {
   UserPlus,
   BarChart3,
   ArrowUpRight,
-  ArrowDownRight,
   Flame,
   Target,
   Zap,
@@ -45,8 +44,6 @@ import {
   Tooltip,
   ResponsiveContainer,
   Cell,
-  PieChart,
-  Pie,
 } from 'recharts'
 
 const topFriends = getTopFriends(5)
@@ -74,7 +71,27 @@ const getTimelineColor = (type: string) => {
   }
 }
 
-const DAYS = ['M', 'T', 'W', 'T', 'F', 'S', 'S']
+const DAYS = ['月', '火', '水', '木', '金', '土', '日']
+
+// Japanese timeline data
+const activityTimelineJa = [
+  { id: 1, type: 'session', title: 'Valorant大勝利', description: 'NightWolf_Xとランクマッチで勝利', time: '2時間前', icon: 'trophy' },
+  { id: 2, type: 'friend', title: '親友達成', description: 'CyberPhoenixとのセッションが100回を突破', time: '5時間前', icon: 'heart' },
+  { id: 3, type: 'achievement', title: '夜更かしゲーマー', description: '今週深夜に5セッションプレイ', time: '1日前', icon: 'moon' },
+  { id: 4, type: 'session', title: 'マラソンセッション', description: 'ShadowBladeと4時間以上プレイ', time: '2日前', icon: 'clock' },
+  { id: 5, type: 'milestone', title: '1000時間達成', description: '総プレイ時間が1000時間に到達！', time: '3日前', icon: 'star' },
+  { id: 6, type: 'friend', title: '再会', description: '2週間ぶりにIceStorm42とプレイ', time: '4日前', icon: 'refresh' },
+]
+
+// Japanese month labels
+const monthlySessionDataJa = [
+  { month: '8月', sessions: 18, hours: 42 },
+  { month: '9月', sessions: 24, hours: 58 },
+  { month: '10月', sessions: 31, hours: 76 },
+  { month: '11月', sessions: 28, hours: 65 },
+  { month: '12月', sessions: 35, hours: 89 },
+  { month: '1月', sessions: 42, hours: 98 },
+]
 
 export default function DashboardPage() {
   return (
@@ -82,20 +99,20 @@ export default function DashboardPage() {
       {/* Page Header with Quick Actions */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
-          <h1 className="text-2xl md:text-3xl font-bold">Dashboard</h1>
-          <p className="text-muted-foreground">Welcome back, GamerUser! Here&apos;s your gaming analytics.</p>
+          <h1 className="text-2xl md:text-3xl font-bold">ダッシュボード</h1>
+          <p className="text-muted-foreground">おかえりなさい、ゲーマーユーザー！こちらがあなたのゲーム分析です。</p>
         </div>
         <div className="flex gap-2">
           <Button asChild variant="outline" className="gap-2">
             <Link href="/dashboard/friends">
               <UserPlus className="w-4 h-4" />
-              Add Friend
+              フレンド追加
             </Link>
           </Button>
           <Button asChild className="gap-2 gradient-primary border-0">
             <Link href="/dashboard/add-session">
               <Plus className="w-4 h-4" />
-              Log Session
+              セッション記録
             </Link>
           </Button>
         </div>
@@ -107,11 +124,11 @@ export default function DashboardPage() {
           <CardContent className="p-5">
             <div className="flex items-start justify-between">
               <div>
-                <p className="text-sm text-muted-foreground font-medium">Total Friends</p>
+                <p className="text-sm text-muted-foreground font-medium">総フレンド数</p>
                 <p className="text-3xl font-bold mt-1">{stats.totalFriends}</p>
                 <div className="flex items-center gap-1 mt-2">
                   <ArrowUpRight className="w-3 h-3 text-green-500" />
-                  <span className="text-xs text-green-500">+{weeklyStats.friendsPlayedChange} this week</span>
+                  <span className="text-xs text-green-500">今週+{weeklyStats.friendsPlayedChange}</span>
                 </div>
               </div>
               <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center group-hover:scale-110 transition-transform">
@@ -125,11 +142,11 @@ export default function DashboardPage() {
           <CardContent className="p-5">
             <div className="flex items-start justify-between">
               <div>
-                <p className="text-sm text-muted-foreground font-medium">Total Sessions</p>
+                <p className="text-sm text-muted-foreground font-medium">総セッション</p>
                 <p className="text-3xl font-bold mt-1">{stats.totalSessions}</p>
                 <div className="flex items-center gap-1 mt-2">
                   <ArrowUpRight className="w-3 h-3 text-green-500" />
-                  <span className="text-xs text-green-500">+{weeklyStats.sessionsChange}% vs last week</span>
+                  <span className="text-xs text-green-500">先週比+{weeklyStats.sessionsChange}%</span>
                 </div>
               </div>
               <div className="w-12 h-12 rounded-xl bg-accent/10 flex items-center justify-center group-hover:scale-110 transition-transform">
@@ -143,11 +160,11 @@ export default function DashboardPage() {
           <CardContent className="p-5">
             <div className="flex items-start justify-between">
               <div>
-                <p className="text-sm text-muted-foreground font-medium">Total Hours</p>
+                <p className="text-sm text-muted-foreground font-medium">総プレイ時間</p>
                 <p className="text-3xl font-bold mt-1">{stats.totalHours.toLocaleString()}</p>
                 <div className="flex items-center gap-1 mt-2">
                   <ArrowUpRight className="w-3 h-3 text-green-500" />
-                  <span className="text-xs text-green-500">+{weeklyStats.hoursChange}% vs last week</span>
+                  <span className="text-xs text-green-500">先週比+{weeklyStats.hoursChange}%</span>
                 </div>
               </div>
               <div className="w-12 h-12 rounded-xl bg-chart-3/10 flex items-center justify-center group-hover:scale-110 transition-transform">
@@ -161,11 +178,11 @@ export default function DashboardPage() {
           <CardContent className="p-5">
             <div className="flex items-start justify-between">
               <div>
-                <p className="text-sm text-muted-foreground font-medium">This Week</p>
+                <p className="text-sm text-muted-foreground font-medium">今週</p>
                 <p className="text-3xl font-bold mt-1">{stats.thisWeekSessions}</p>
                 <div className="flex items-center gap-1 mt-2">
                   <Flame className="w-3 h-3 text-orange-500" />
-                  <span className="text-xs text-orange-500">Hot streak!</span>
+                  <span className="text-xs text-orange-500">絶好調！</span>
                 </div>
               </div>
               <div className="w-12 h-12 rounded-xl bg-chart-4/10 flex items-center justify-center group-hover:scale-110 transition-transform">
@@ -185,9 +202,9 @@ export default function DashboardPage() {
               <div>
                 <CardTitle className="flex items-center gap-2 text-lg">
                   <BarChart3 className="w-5 h-5 text-primary" />
-                  Monthly Activity
+                  月間アクティビティ
                 </CardTitle>
-                <CardDescription>Sessions and hours over the last 6 months</CardDescription>
+                <CardDescription>過去6ヶ月のセッション数と時間</CardDescription>
               </div>
               <Badge variant="secondary" className="text-xs">
                 <TrendingUp className="w-3 h-3 mr-1" />
@@ -198,7 +215,7 @@ export default function DashboardPage() {
           <CardContent className="pt-4">
             <div className="h-[280px]">
               <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={monthlySessionData}>
+                <AreaChart data={monthlySessionDataJa}>
                   <defs>
                     <linearGradient id="colorSessions" x1="0" y1="0" x2="0" y2="1">
                       <stop offset="5%" stopColor="oklch(0.65 0.2 270)" stopOpacity={0.3}/>
@@ -238,7 +255,7 @@ export default function DashboardPage() {
                     strokeWidth={2}
                     fillOpacity={1} 
                     fill="url(#colorSessions)" 
-                    name="Sessions"
+                    name="セッション"
                   />
                   <Area 
                     type="monotone" 
@@ -247,7 +264,7 @@ export default function DashboardPage() {
                     strokeWidth={2}
                     fillOpacity={1} 
                     fill="url(#colorHours)" 
-                    name="Hours"
+                    name="時間"
                   />
                 </AreaChart>
               </ResponsiveContainer>
@@ -262,9 +279,9 @@ export default function DashboardPage() {
               <div>
                 <CardTitle className="flex items-center gap-2 text-lg">
                   <Target className="w-5 h-5 text-accent" />
-                  Most Played Games
+                  よくプレイするゲーム
                 </CardTitle>
-                <CardDescription>Top games by hours played</CardDescription>
+                <CardDescription>プレイ時間別トップゲーム</CardDescription>
               </div>
             </div>
           </CardHeader>
@@ -290,7 +307,7 @@ export default function DashboardPage() {
                       borderRadius: '8px',
                       color: 'oklch(0.95 0 0)'
                     }}
-                    formatter={(value: number) => [`${value}h`, 'Hours']}
+                    formatter={(value: number) => [`${value}時間`, 'プレイ時間']}
                   />
                   <Bar dataKey="hours" radius={[0, 4, 4, 0]}>
                     {gamesPlayedData.map((entry, index) => (
@@ -322,10 +339,10 @@ export default function DashboardPage() {
             <div className="flex items-center justify-between">
               <CardTitle className="flex items-center gap-2 text-lg">
                 <Trophy className="w-5 h-5 text-yellow-500" />
-                Friend Leaderboard
+                フレンドランキング
               </CardTitle>
               <Link href="/dashboard/rankings" className="text-xs text-primary hover:underline">
-                View All
+                すべて見る
               </Link>
             </div>
           </CardHeader>
@@ -355,7 +372,7 @@ export default function DashboardPage() {
                 </div>
                 <div className="text-right shrink-0">
                   <p className="font-bold text-sm">{friend.playCount}</p>
-                  <p className="text-[10px] text-muted-foreground">sessions</p>
+                  <p className="text-[10px] text-muted-foreground">セッション</p>
                 </div>
               </Link>
             ))}
@@ -367,18 +384,18 @@ export default function DashboardPage() {
           <CardHeader className="pb-2">
             <CardTitle className="flex items-center gap-2 text-lg">
               <Zap className="w-5 h-5 text-amber-500" />
-              Activity Timeline
+              アクティビティ履歴
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {activityTimeline.slice(0, 5).map((event, index) => (
+              {activityTimelineJa.slice(0, 5).map((event, index) => (
                 <div key={event.id} className="flex gap-3">
                   <div className="relative flex flex-col items-center">
                     <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${getTimelineColor(event.type)}`}>
                       {getTimelineIcon(event.icon)}
                     </div>
-                    {index < activityTimeline.slice(0, 5).length - 1 && (
+                    {index < activityTimelineJa.slice(0, 5).length - 1 && (
                       <div className="w-px h-full bg-border absolute top-8 left-1/2 -translate-x-1/2" />
                     )}
                   </div>
@@ -399,9 +416,9 @@ export default function DashboardPage() {
             <div className="flex items-center justify-between">
               <CardTitle className="flex items-center gap-2 text-lg">
                 <Flame className="w-5 h-5 text-orange-500" />
-                Activity Heatmap
+                アクティビティヒートマップ
               </CardTitle>
-              <span className="text-xs text-muted-foreground">Last 12 weeks</span>
+              <span className="text-xs text-muted-foreground">過去12週間</span>
             </div>
           </CardHeader>
           <CardContent>
@@ -429,14 +446,14 @@ export default function DashboardPage() {
                           ? 'oklch(0.22 0.01 280)' 
                           : `oklch(0.65 0.2 270 / ${opacity})`
                       }}
-                      title={`Week ${weekIndex + 1}, ${['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'][dayIndex]}: ${sessions} sessions`}
+                      title={`${weekIndex + 1}週目 ${['月', '火', '水', '木', '金', '土', '日'][dayIndex]}曜日: ${sessions}セッション`}
                     />
                   )
                 })}
               </div>
             ))}
             <div className="flex items-center justify-end gap-2 mt-3">
-              <span className="text-[10px] text-muted-foreground">Less</span>
+              <span className="text-[10px] text-muted-foreground">少ない</span>
               {[0.1, 0.3, 0.5, 0.7, 1].map((opacity, i) => (
                 <div
                   key={i}
@@ -444,7 +461,7 @@ export default function DashboardPage() {
                   style={{ backgroundColor: `oklch(0.65 0.2 270 / ${opacity})` }}
                 />
               ))}
-              <span className="text-[10px] text-muted-foreground">More</span>
+              <span className="text-[10px] text-muted-foreground">多い</span>
             </div>
           </CardContent>
         </Card>
@@ -458,10 +475,10 @@ export default function DashboardPage() {
             <div className="flex items-center justify-between">
               <CardTitle className="flex items-center gap-2 text-lg">
                 <Gamepad2 className="w-5 h-5 text-accent" />
-                Recent Sessions
+                最近のセッション
               </CardTitle>
               <Link href="/dashboard/friends" className="text-xs text-primary hover:underline">
-                View All
+                すべて見る
               </Link>
             </div>
           </CardHeader>
@@ -477,13 +494,13 @@ export default function DashboardPage() {
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="font-medium text-sm">
-                      Played <span className="text-primary">{session.game}</span>
+                      <span className="text-primary">{session.game}</span>をプレイ
                     </p>
-                    <p className="text-xs text-muted-foreground">with {session.friendName}</p>
+                    <p className="text-xs text-muted-foreground">{session.friendName}と</p>
                   </div>
                   <div className="text-right shrink-0">
                     <Badge variant="outline" className="text-xs">
-                      {session.duration} min
+                      {session.duration}分
                     </Badge>
                     <p className="text-[10px] text-muted-foreground mt-1">{session.date}</p>
                   </div>
@@ -498,7 +515,7 @@ export default function DashboardPage() {
           <CardHeader className="pb-2">
             <CardTitle className="flex items-center gap-2 text-lg">
               <Zap className="w-5 h-5 text-primary" />
-              Quick Actions
+              クイックアクション
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
@@ -508,8 +525,8 @@ export default function DashboardPage() {
                   <Plus className="w-4 h-4 text-primary" />
                 </div>
                 <div className="text-left">
-                  <p className="font-medium text-sm">Log New Session</p>
-                  <p className="text-[10px] text-muted-foreground">Record your gaming time</p>
+                  <p className="font-medium text-sm">新規セッション記録</p>
+                  <p className="text-[10px] text-muted-foreground">ゲーム時間を記録</p>
                 </div>
               </Link>
             </Button>
@@ -520,8 +537,8 @@ export default function DashboardPage() {
                   <UserPlus className="w-4 h-4 text-accent" />
                 </div>
                 <div className="text-left">
-                  <p className="font-medium text-sm">Add New Friend</p>
-                  <p className="text-[10px] text-muted-foreground">Grow your network</p>
+                  <p className="font-medium text-sm">新規フレンド追加</p>
+                  <p className="text-[10px] text-muted-foreground">ネットワークを拡大</p>
                 </div>
               </Link>
             </Button>
@@ -532,8 +549,8 @@ export default function DashboardPage() {
                   <Trophy className="w-4 h-4 text-yellow-500" />
                 </div>
                 <div className="text-left">
-                  <p className="font-medium text-sm">View Rankings</p>
-                  <p className="text-[10px] text-muted-foreground">See who you play most</p>
+                  <p className="font-medium text-sm">ランキング表示</p>
+                  <p className="text-[10px] text-muted-foreground">最も遊ぶフレンドを確認</p>
                 </div>
               </Link>
             </Button>
@@ -544,8 +561,8 @@ export default function DashboardPage() {
                   <BarChart3 className="w-4 h-4 text-chart-3" />
                 </div>
                 <div className="text-left">
-                  <p className="font-medium text-sm">Network View</p>
-                  <p className="text-[10px] text-muted-foreground">Visualize connections</p>
+                  <p className="font-medium text-sm">関係図表示</p>
+                  <p className="text-[10px] text-muted-foreground">繋がりを可視化</p>
                 </div>
               </Link>
             </Button>

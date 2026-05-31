@@ -49,8 +49,8 @@ export default function RankingsPage() {
     <div className="p-6 space-y-6">
       {/* Page Header */}
       <div>
-        <h1 className="text-2xl font-bold">Friend Rankings</h1>
-        <p className="text-muted-foreground">See who you game with the most</p>
+        <h1 className="text-2xl font-bold">フレンドランキング</h1>
+        <p className="text-muted-foreground">最も一緒にプレイしているフレンドを確認</p>
       </div>
 
       {/* Top 3 Podium */}
@@ -79,16 +79,16 @@ export default function RankingsPage() {
                     'bg-orange-500/20 text-orange-500'
                   }`}
                 >
-                  #{rank} Ranked
+                  #{rank} ランク
                 </Badge>
                 <div className="mt-4 space-y-2 text-sm">
                   <div className="flex items-center justify-center gap-2 text-muted-foreground">
                     <Gamepad2 className="w-4 h-4" />
-                    <span>{friend.playCount} sessions</span>
+                    <span>{friend.playCount} セッション</span>
                   </div>
                   <div className="flex items-center justify-center gap-2 text-muted-foreground">
                     <Clock className="w-4 h-4" />
-                    <span>{friend.totalHours} hours</span>
+                    <span>{friend.totalHours} 時間</span>
                   </div>
                 </div>
               </CardContent>
@@ -102,7 +102,7 @@ export default function RankingsPage() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Trophy className="w-5 h-5 text-primary" />
-            Full Rankings
+            全ランキング
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -132,12 +132,12 @@ export default function RankingsPage() {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between mb-1">
                       <h4 className="font-medium truncate">{friend.name}</h4>
-                      <span className="text-sm font-semibold">{friend.playCount} sessions</span>
+                      <span className="text-sm font-semibold">{friend.playCount} セッション</span>
                     </div>
                     <Progress value={progressPercent} className="h-2" />
                     <div className="flex items-center justify-between mt-1 text-xs text-muted-foreground">
                       <span>{friend.favoriteGame}</span>
-                      <span>{friend.totalHours} hours total</span>
+                      <span>{friend.totalHours} 時間</span>
                     </div>
                   </div>
                 </div>

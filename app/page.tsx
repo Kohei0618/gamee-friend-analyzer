@@ -18,31 +18,31 @@ import {
 const features = [
   {
     icon: BarChart3,
-    title: 'Friend Analytics',
-    description: 'Track detailed statistics about your gaming sessions with each friend.'
+    title: 'フレンド分析',
+    description: '各フレンドとのゲームセッションの詳細な統計を追跡します。'
   },
   {
     icon: Clock,
-    title: 'Session Tracking',
-    description: 'Log every gaming session with duration, game, and personal notes.'
+    title: 'セッション記録',
+    description: 'プレイ時間、ゲーム、メモを含むすべてのゲームセッションを記録します。'
   },
   {
     icon: Trophy,
-    title: 'Friend Rankings',
-    description: 'See who your top gaming buddies are based on play frequency.'
+    title: 'フレンドランキング',
+    description: 'プレイ頻度に基づいてトップのゲーム仲間を確認します。'
   },
   {
     icon: Network,
-    title: 'Relationship Network',
-    description: 'Visualize connections and discover mutual gaming friends.'
+    title: '関係ネットワーク',
+    description: '繋がりを可視化し、共通のゲームフレンドを発見します。'
   }
 ]
 
 const stats = [
-  { value: '10K+', label: 'Active Users' },
-  { value: '50K+', label: 'Sessions Tracked' },
-  { value: '100+', label: 'Games Supported' },
-  { value: '99.9%', label: 'Uptime' }
+  { value: '10K+', label: 'アクティブユーザー' },
+  { value: '50K+', label: '記録セッション' },
+  { value: '100+', label: '対応ゲーム' },
+  { value: '99.9%', label: '稼働率' }
 ]
 
 export default function LandingPage() {
@@ -55,14 +55,14 @@ export default function LandingPage() {
             <div className="w-8 h-8 rounded-lg gradient-primary flex items-center justify-center">
               <Gamepad2 className="w-5 h-5 text-primary-foreground" />
             </div>
-            <span className="font-semibold text-lg">Gamee Friend Analyzer</span>
+            <span className="font-semibold text-lg">Gamee フレンド分析</span>
           </Link>
           <div className="flex items-center gap-4">
             <Link href="/login">
-              <Button variant="ghost" size="sm">Login</Button>
+              <Button variant="ghost" size="sm">ログイン</Button>
             </Link>
             <Link href="/register">
-              <Button size="sm" className="gradient-primary border-0">Get Started</Button>
+              <Button size="sm" className="gradient-primary border-0">はじめる</Button>
             </Link>
           </div>
         </nav>
@@ -80,28 +80,29 @@ export default function LandingPage() {
           <div className="max-w-3xl mx-auto text-center">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-border bg-secondary/50 text-sm text-muted-foreground mb-6">
               <TrendingUp className="w-4 h-4 text-accent" />
-              <span>Track your gaming journey</span>
+              <span>ゲーミングジャーニーを追跡</span>
             </div>
             <h1 className="text-4xl md:text-6xl font-bold mb-6 text-balance leading-tight">
-              Analyze Your{' '}
+              あなたの{' '}
               <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-                Gaming Friendships
+                ゲームフレンドシップ
               </span>
+              {' '}を分析
             </h1>
             <p className="text-lg md:text-xl text-muted-foreground mb-8 text-pretty max-w-2xl mx-auto">
-              Track sessions, rank your gaming buddies, and visualize your social gaming network. 
-              Know who you play with most and never lose touch with your gaming friends.
+              セッションを追跡し、ゲーム仲間をランキングし、ソーシャルゲーミングネットワークを可視化。
+              誰と一番遊んでいるかを把握し、ゲームフレンドとの繋がりを維持しましょう。
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link href="/register">
                 <Button size="lg" className="gradient-primary border-0 w-full sm:w-auto">
-                  Get Started Free
+                  無料で始める
                   <ArrowRight className="w-4 h-4 ml-2" />
                 </Button>
               </Link>
               <Link href="/login">
                 <Button size="lg" variant="outline" className="w-full sm:w-auto">
-                  Sign In
+                  サインイン
                 </Button>
               </Link>
             </div>
@@ -130,10 +131,10 @@ export default function LandingPage() {
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold mb-4 text-balance">
-              Everything You Need to Track Your Gaming
+              ゲームを追跡するために必要なすべて
             </h2>
             <p className="text-muted-foreground max-w-2xl mx-auto text-pretty">
-              Comprehensive tools to manage your gaming social life and stay connected with friends.
+              ゲームソーシャルライフを管理し、フレンドとの繋がりを維持するための包括的なツール。
             </p>
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -162,18 +163,18 @@ export default function LandingPage() {
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div>
               <h2 className="text-3xl md:text-4xl font-bold mb-4 text-balance">
-                Powerful Dashboard at Your Fingertips
+                パワフルなダッシュボードを手元に
               </h2>
               <p className="text-muted-foreground mb-6 text-pretty">
-                Get instant insights into your gaming activity. See your top friends, 
-                recent sessions, and gaming statistics all in one place.
+                ゲームアクティビティの即座のインサイトを取得。トップフレンド、
+                最近のセッション、ゲーム統計をすべて一箇所で確認できます。
               </p>
               <ul className="space-y-3">
                 {[
-                  'Real-time friend status tracking',
-                  'Detailed session history and notes',
-                  'Smart friend recommendations',
-                  'Export your gaming data anytime'
+                  'リアルタイムフレンドステータス追跡',
+                  '詳細なセッション履歴とメモ',
+                  'スマートなフレンドレコメンデーション',
+                  'いつでもゲームデータをエクスポート'
                 ].map((item) => (
                   <li key={item} className="flex items-center gap-3 text-muted-foreground">
                     <div className="w-5 h-5 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0">
@@ -185,7 +186,7 @@ export default function LandingPage() {
               </ul>
               <Link href="/register" className="inline-block mt-8">
                 <Button className="gradient-primary border-0">
-                  Try Dashboard Now
+                  ダッシュボードを試す
                   <ArrowRight className="w-4 h-4 ml-2" />
                 </Button>
               </Link>
@@ -202,19 +203,19 @@ export default function LandingPage() {
                   <Card className="bg-secondary/50 border-border/50">
                     <CardContent className="p-4">
                       <div className="text-2xl font-bold">156</div>
-                      <div className="text-xs text-muted-foreground">Total Sessions</div>
+                      <div className="text-xs text-muted-foreground">総セッション</div>
                     </CardContent>
                   </Card>
                   <Card className="bg-secondary/50 border-border/50">
                     <CardContent className="p-4">
                       <div className="text-2xl font-bold text-primary">8</div>
-                      <div className="text-xs text-muted-foreground">Active Friends</div>
+                      <div className="text-xs text-muted-foreground">アクティブフレンド</div>
                     </CardContent>
                   </Card>
                 </div>
                 <Card className="bg-secondary/50 border-border/50">
                   <CardHeader className="pb-2">
-                    <CardTitle className="text-sm">Top Friends</CardTitle>
+                    <CardTitle className="text-sm">トップフレンド</CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-2">
                     {['NightWolf_X', 'CyberPhoenix', 'PixelQueen99'].map((name, i) => (
@@ -225,7 +226,7 @@ export default function LandingPage() {
                           </div>
                           <span className="text-sm">{name}</span>
                         </div>
-                        <span className="text-xs text-muted-foreground">{156 - i * 22} games</span>
+                        <span className="text-xs text-muted-foreground">{156 - i * 22} ゲーム</span>
                       </div>
                     ))}
                   </CardContent>
@@ -244,14 +245,14 @@ export default function LandingPage() {
           <Card className="gradient-primary border-0 overflow-hidden relative">
             <CardContent className="py-12 px-6 md:px-12 text-center relative z-10">
               <h2 className="text-2xl md:text-3xl font-bold mb-4 text-primary-foreground text-balance">
-                Ready to Level Up Your Gaming Social Life?
+                ゲームソーシャルライフをレベルアップする準備はできましたか？
               </h2>
               <p className="text-primary-foreground/80 mb-8 max-w-xl mx-auto text-pretty">
-                Join thousands of gamers who are already tracking their gaming friendships.
+                すでに何千人ものゲーマーがゲームフレンドシップを追跡しています。
               </p>
               <Link href="/register">
                 <Button size="lg" variant="secondary" className="bg-background text-foreground hover:bg-background/90">
-                  Create Free Account
+                  無料アカウントを作成
                   <ArrowRight className="w-4 h-4 ml-2" />
                 </Button>
               </Link>
@@ -271,15 +272,15 @@ export default function LandingPage() {
               <div className="w-6 h-6 rounded-md gradient-primary flex items-center justify-center">
                 <Gamepad2 className="w-4 h-4 text-primary-foreground" />
               </div>
-              <span className="text-sm text-muted-foreground">Gamee Friend Analyzer</span>
+              <span className="text-sm text-muted-foreground">Gamee フレンド分析</span>
             </div>
             <div className="flex items-center gap-6 text-sm text-muted-foreground">
-              <Link href="#" className="hover:text-foreground transition-colors">Privacy</Link>
-              <Link href="#" className="hover:text-foreground transition-colors">Terms</Link>
-              <Link href="#" className="hover:text-foreground transition-colors">Support</Link>
+              <Link href="#" className="hover:text-foreground transition-colors">プライバシー</Link>
+              <Link href="#" className="hover:text-foreground transition-colors">利用規約</Link>
+              <Link href="#" className="hover:text-foreground transition-colors">サポート</Link>
             </div>
             <div className="text-sm text-muted-foreground">
-              {new Date().getFullYear()} Gamee Friend Analyzer
+              {new Date().getFullYear()} Gamee フレンド分析
             </div>
           </div>
         </div>

@@ -57,11 +57,11 @@ export default function FriendDetailPage({
   const getStatusLabel = (status: Friend['status']) => {
     switch (status) {
       case 'online':
-        return 'Online'
+        return 'オンライン'
       case 'in-game':
-        return 'In Game'
+        return 'ゲーム中'
       case 'offline':
-        return 'Offline'
+        return 'オフライン'
       default:
         return status
     }
@@ -78,7 +78,7 @@ export default function FriendDetailPage({
         className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
       >
         <ArrowLeft className="w-4 h-4" />
-        <span>Back to Friends</span>
+        <span>フレンド一覧に戻る</span>
       </Link>
 
       {/* Friend Profile Card */}
@@ -97,18 +97,18 @@ export default function FriendDetailPage({
                 <h1 className="text-2xl font-bold">{friend.name}</h1>
                 <Badge variant="secondary">{getStatusLabel(friend.status)}</Badge>
               </div>
-              <p className="text-muted-foreground mt-1">Favorite game: {friend.favoriteGame}</p>
+              <p className="text-muted-foreground mt-1">お気に入りゲーム: {friend.favoriteGame}</p>
               <div className="flex flex-wrap gap-4 mt-4">
                 <Button asChild className="gradient-primary border-0">
                   <Link href="/dashboard/add-session">
                     <Gamepad2 className="w-4 h-4 mr-2" />
-                    Log Session
+                    セッション記録
                   </Link>
                 </Button>
                 <Button variant="outline" asChild>
                   <Link href="/dashboard/network">
                     <Network className="w-4 h-4 mr-2" />
-                    View Network
+                    関係図を見る
                   </Link>
                 </Button>
               </div>
@@ -127,7 +127,7 @@ export default function FriendDetailPage({
               </div>
               <div>
                 <p className="text-2xl font-bold">{friend.playCount}</p>
-                <p className="text-sm text-muted-foreground">Total Sessions</p>
+                <p className="text-sm text-muted-foreground">総セッション</p>
               </div>
             </div>
           </CardContent>
@@ -141,7 +141,7 @@ export default function FriendDetailPage({
               </div>
               <div>
                 <p className="text-2xl font-bold">{friend.totalHours}</p>
-                <p className="text-sm text-muted-foreground">Total Hours</p>
+                <p className="text-sm text-muted-foreground">総時間</p>
               </div>
             </div>
           </CardContent>
@@ -155,7 +155,7 @@ export default function FriendDetailPage({
               </div>
               <div>
                 <p className="text-2xl font-bold">{friend.lastPlayed}</p>
-                <p className="text-sm text-muted-foreground">Last Played</p>
+                <p className="text-sm text-muted-foreground">最終プレイ</p>
               </div>
             </div>
           </CardContent>
@@ -168,7 +168,7 @@ export default function FriendDetailPage({
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <TrendingUp className="w-5 h-5 text-primary" />
-              Play History
+              プレイ履歴
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -176,10 +176,10 @@ export default function FriendDetailPage({
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Game</TableHead>
-                    <TableHead>Date</TableHead>
-                    <TableHead>Duration</TableHead>
-                    <TableHead>Voice</TableHead>
+                    <TableHead>ゲーム</TableHead>
+                    <TableHead>日付</TableHead>
+                    <TableHead>時間</TableHead>
+                    <TableHead>ボイス</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -187,7 +187,7 @@ export default function FriendDetailPage({
                     <TableRow key={session.id}>
                       <TableCell className="font-medium">{session.game}</TableCell>
                       <TableCell>{session.date}</TableCell>
-                      <TableCell>{session.duration} min</TableCell>
+                      <TableCell>{session.duration}分</TableCell>
                       <TableCell>
                         {session.voiceChat ? (
                           <Mic className="w-4 h-4 text-green-500" />
@@ -201,7 +201,7 @@ export default function FriendDetailPage({
               </Table>
             ) : (
               <p className="text-center text-muted-foreground py-8">
-                No sessions recorded yet. Start playing together!
+                まだセッションが記録されていません。一緒にプレイを始めましょう！
               </p>
             )}
           </CardContent>
@@ -212,7 +212,7 @@ export default function FriendDetailPage({
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Users className="w-5 h-5 text-accent" />
-              Mutual Friends
+              共通のフレンド
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -228,7 +228,7 @@ export default function FriendDetailPage({
                 </Avatar>
                 <div className="flex-1 min-w-0">
                   <p className="font-medium truncate">{mutualFriend.name}</p>
-                  <p className="text-xs text-muted-foreground">{mutualFriend.playCount} sessions</p>
+                  <p className="text-xs text-muted-foreground">{mutualFriend.playCount} セッション</p>
                 </div>
               </Link>
             ))}

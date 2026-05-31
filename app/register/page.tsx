@@ -34,7 +34,7 @@ export default function RegisterPage() {
       <header className="relative z-10 p-4">
         <Link href="/" className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors">
           <ArrowLeft className="w-4 h-4" />
-          <span>Back to Home</span>
+          <span>ホームに戻る</span>
         </Link>
       </header>
 
@@ -47,13 +47,13 @@ export default function RegisterPage() {
                 <Gamepad2 className="w-7 h-7 text-primary-foreground" />
               </div>
             </div>
-            <CardTitle className="text-2xl">Create Account</CardTitle>
-            <CardDescription>Join Gamee Friend Analyzer and start tracking</CardDescription>
+            <CardTitle className="text-2xl">アカウント作成</CardTitle>
+            <CardDescription>Gamee フレンド分析に参加して追跡を始めましょう</CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="nickname">Nickname</Label>
+                <Label htmlFor="nickname">ニックネーム</Label>
                 <div className="relative">
                   <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                   <Input
@@ -66,7 +66,7 @@ export default function RegisterPage() {
                 </div>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="email">メールアドレス</Label>
                 <div className="relative">
                   <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                   <Input
@@ -79,26 +79,26 @@ export default function RegisterPage() {
                 </div>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="password">Password</Label>
+                <Label htmlFor="password">パスワード</Label>
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                   <Input
                     id="password"
                     type="password"
-                    placeholder="Create a strong password"
+                    placeholder="強力なパスワードを作成"
                     className="pl-10"
                     required
                   />
                 </div>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="confirmPassword">Confirm Password</Label>
+                <Label htmlFor="confirmPassword">パスワード確認</Label>
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                   <Input
                     id="confirmPassword"
                     type="password"
-                    placeholder="Confirm your password"
+                    placeholder="パスワードを再入力"
                     className="pl-10"
                     required
                   />
@@ -109,15 +109,16 @@ export default function RegisterPage() {
                 className="w-full gradient-primary border-0"
                 disabled={isLoading}
               >
-                {isLoading ? 'Creating Account...' : 'Create Account'}
+                {isLoading ? 'アカウント作成中...' : 'アカウント作成'}
               </Button>
             </form>
 
             <p className="text-center text-xs text-muted-foreground mt-4">
-              By creating an account, you agree to our{' '}
-              <Link href="#" className="text-primary hover:underline">Terms of Service</Link>
-              {' '}and{' '}
-              <Link href="#" className="text-primary hover:underline">Privacy Policy</Link>
+              アカウントを作成することで、
+              <Link href="#" className="text-primary hover:underline">利用規約</Link>
+              と
+              <Link href="#" className="text-primary hover:underline">プライバシーポリシー</Link>
+              に同意したことになります
             </p>
 
             <div className="relative my-6">
@@ -125,7 +126,7 @@ export default function RegisterPage() {
                 <div className="w-full border-t border-border" />
               </div>
               <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-card px-2 text-muted-foreground">Or continue with</span>
+                <span className="bg-card px-2 text-muted-foreground">または</span>
               </div>
             </div>
 
@@ -148,13 +149,13 @@ export default function RegisterPage() {
                   d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
                 />
               </svg>
-              Continue with Google
+              Googleで続ける
             </Button>
 
             <p className="text-center text-sm text-muted-foreground mt-6">
-              Already have an account?{' '}
+              すでにアカウントをお持ちですか？{' '}
               <Link href="/login" className="text-primary hover:underline">
-                Sign In
+                サインイン
               </Link>
             </p>
           </CardContent>

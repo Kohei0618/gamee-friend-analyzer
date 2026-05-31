@@ -50,11 +50,11 @@ export default function FriendsPage() {
   const getStatusLabel = (status: Friend['status']) => {
     switch (status) {
       case 'online':
-        return 'Online'
+        return 'オンライン'
       case 'in-game':
-        return 'In Game'
+        return 'ゲーム中'
       case 'offline':
-        return 'Offline'
+        return 'オフライン'
       default:
         return status
     }
@@ -64,8 +64,8 @@ export default function FriendsPage() {
     <div className="p-6 space-y-6">
       {/* Page Header */}
       <div>
-        <h1 className="text-2xl font-bold">Friends</h1>
-        <p className="text-muted-foreground">Manage your gaming friends list</p>
+        <h1 className="text-2xl font-bold">フレンド一覧</h1>
+        <p className="text-muted-foreground">ゲームフレンドを管理する</p>
       </div>
 
       {/* Filters */}
@@ -73,7 +73,7 @@ export default function FriendsPage() {
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
           <Input
-            placeholder="Search friends..."
+            placeholder="フレンドを検索..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="pl-10"
@@ -82,13 +82,13 @@ export default function FriendsPage() {
         <Select value={statusFilter} onValueChange={setStatusFilter}>
           <SelectTrigger className="w-full sm:w-[180px]">
             <Filter className="w-4 h-4 mr-2" />
-            <SelectValue placeholder="Filter by status" />
+            <SelectValue placeholder="ステータスで絞り込み" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All Status</SelectItem>
-            <SelectItem value="online">Online</SelectItem>
-            <SelectItem value="in-game">In Game</SelectItem>
-            <SelectItem value="offline">Offline</SelectItem>
+            <SelectItem value="all">すべてのステータス</SelectItem>
+            <SelectItem value="online">オンライン</SelectItem>
+            <SelectItem value="in-game">ゲーム中</SelectItem>
+            <SelectItem value="offline">オフライン</SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -117,11 +117,11 @@ export default function FriendsPage() {
               <div className="mt-4 space-y-2">
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <Gamepad2 className="w-4 h-4" />
-                  <span>{friend.playCount} sessions</span>
+                  <span>{friend.playCount} セッション</span>
                 </div>
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <Clock className="w-4 h-4" />
-                  <span>Last: {friend.lastPlayed}</span>
+                  <span>最終: {friend.lastPlayed}</span>
                 </div>
               </div>
 
@@ -129,7 +129,7 @@ export default function FriendsPage() {
                 <Button asChild variant="outline" size="sm" className="flex-1">
                   <Link href={`/dashboard/friends/${friend.id}`}>
                     <Eye className="w-4 h-4 mr-1" />
-                    Details
+                    詳細
                   </Link>
                 </Button>
                 <Button variant="ghost" size="sm" className="text-destructive hover:text-destructive hover:bg-destructive/10">
@@ -143,7 +143,7 @@ export default function FriendsPage() {
 
       {filteredFriends.length === 0 && (
         <div className="text-center py-12">
-          <p className="text-muted-foreground">No friends found matching your criteria.</p>
+          <p className="text-muted-foreground">条件に一致するフレンドが見つかりませんでした。</p>
         </div>
       )}
     </div>

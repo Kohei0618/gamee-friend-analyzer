@@ -61,8 +61,8 @@ export default function AddSessionPage() {
             <div className="w-16 h-16 rounded-full bg-green-500/20 flex items-center justify-center mx-auto mb-4">
               <CheckCircle className="w-8 h-8 text-green-500" />
             </div>
-            <h2 className="text-xl font-bold mb-2">Session Saved!</h2>
-            <p className="text-muted-foreground">Your gaming session has been recorded successfully.</p>
+            <h2 className="text-xl font-bold mb-2">セッションを保存しました！</h2>
+            <p className="text-muted-foreground">ゲームセッションが正常に記録されました。</p>
           </CardContent>
         </Card>
       </div>
@@ -73,14 +73,14 @@ export default function AddSessionPage() {
     <div className="p-6 space-y-6">
       {/* Page Header */}
       <div>
-        <h1 className="text-2xl font-bold">Add Play Session</h1>
-        <p className="text-muted-foreground">Record a new gaming session with a friend</p>
+        <h1 className="text-2xl font-bold">プレイ記録追加</h1>
+        <p className="text-muted-foreground">フレンドとの新しいゲームセッションを記録</p>
       </div>
 
       <Card className="bg-card/50 border-border/50 max-w-2xl">
         <CardHeader>
-          <CardTitle>Session Details</CardTitle>
-          <CardDescription>Fill in the details about your gaming session</CardDescription>
+          <CardTitle>セッション詳細</CardTitle>
+          <CardDescription>ゲームセッションの詳細を入力してください</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-6">
@@ -88,14 +88,14 @@ export default function AddSessionPage() {
             <div className="space-y-2">
               <Label htmlFor="friend" className="flex items-center gap-2">
                 <Users className="w-4 h-4" />
-                Friend
+                フレンド
               </Label>
               <Select 
                 value={formData.friendId} 
                 onValueChange={(value) => setFormData(prev => ({ ...prev, friendId: value }))}
               >
                 <SelectTrigger id="friend">
-                  <SelectValue placeholder="Select a friend" />
+                  <SelectValue placeholder="フレンドを選択" />
                 </SelectTrigger>
                 <SelectContent>
                   {friends.map((friend) => (
@@ -111,14 +111,14 @@ export default function AddSessionPage() {
             <div className="space-y-2">
               <Label htmlFor="game" className="flex items-center gap-2">
                 <Gamepad2 className="w-4 h-4" />
-                Game
+                ゲーム
               </Label>
               <Select 
                 value={formData.game} 
                 onValueChange={(value) => setFormData(prev => ({ ...prev, game: value }))}
               >
                 <SelectTrigger id="game">
-                  <SelectValue placeholder="Select a game" />
+                  <SelectValue placeholder="ゲームを選択" />
                 </SelectTrigger>
                 <SelectContent>
                   {games.map((game) => (
@@ -135,7 +135,7 @@ export default function AddSessionPage() {
               <div className="space-y-2">
                 <Label htmlFor="date" className="flex items-center gap-2">
                   <Calendar className="w-4 h-4" />
-                  Date
+                  日付
                 </Label>
                 <Input
                   id="date"
@@ -147,12 +147,12 @@ export default function AddSessionPage() {
               <div className="space-y-2">
                 <Label htmlFor="duration" className="flex items-center gap-2">
                   <Clock className="w-4 h-4" />
-                  Duration (minutes)
+                  プレイ時間（分）
                 </Label>
                 <Input
                   id="duration"
                   type="number"
-                  placeholder="e.g., 120"
+                  placeholder="例: 120"
                   min="1"
                   value={formData.duration}
                   onChange={(e) => setFormData(prev => ({ ...prev, duration: e.target.value }))}
@@ -165,8 +165,8 @@ export default function AddSessionPage() {
               <div className="flex items-center gap-3">
                 <Mic className="w-5 h-5 text-muted-foreground" />
                 <div>
-                  <Label htmlFor="voiceChat" className="cursor-pointer">Voice Chat Used</Label>
-                  <p className="text-xs text-muted-foreground">Did you use voice chat during this session?</p>
+                  <Label htmlFor="voiceChat" className="cursor-pointer">ボイスチャット使用</Label>
+                  <p className="text-xs text-muted-foreground">このセッションでボイスチャットを使用しましたか？</p>
                 </div>
               </div>
               <Switch
@@ -178,10 +178,10 @@ export default function AddSessionPage() {
 
             {/* Notes */}
             <div className="space-y-2">
-              <Label htmlFor="notes">Notes (optional)</Label>
+              <Label htmlFor="notes">メモ（任意）</Label>
               <Textarea
                 id="notes"
-                placeholder="Any memorable moments or notes about this session..."
+                placeholder="このセッションで印象的だった瞬間やメモ..."
                 rows={4}
                 value={formData.notes}
                 onChange={(e) => setFormData(prev => ({ ...prev, notes: e.target.value }))}
@@ -195,11 +195,11 @@ export default function AddSessionPage() {
               disabled={isLoading || !formData.friendId || !formData.game || !formData.duration}
             >
               {isLoading ? (
-                'Saving...'
+                '保存中...'
               ) : (
                 <>
                   <Save className="w-4 h-4 mr-2" />
-                  Save Session
+                  セッションを保存
                 </>
               )}
             </Button>

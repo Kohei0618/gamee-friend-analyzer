@@ -35,8 +35,8 @@ export default function SettingsPage() {
     <div className="p-6 space-y-6">
       {/* Page Header */}
       <div>
-        <h1 className="text-2xl font-bold">Settings</h1>
-        <p className="text-muted-foreground">Manage your account and preferences</p>
+        <h1 className="text-2xl font-bold">設定</h1>
+        <p className="text-muted-foreground">アカウントと設定を管理</p>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-3">
@@ -45,9 +45,9 @@ export default function SettingsPage() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <User className="w-5 h-5 text-primary" />
-              Profile Settings
+              プロフィール設定
             </CardTitle>
-            <CardDescription>Update your personal information</CardDescription>
+            <CardDescription>個人情報を更新</CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
             <div className="flex items-center gap-6">
@@ -65,29 +65,29 @@ export default function SettingsPage() {
                 </Button>
               </div>
               <div>
-                <h3 className="font-semibold">Profile Picture</h3>
-                <p className="text-sm text-muted-foreground">JPG, PNG or GIF. Max 2MB.</p>
+                <h3 className="font-semibold">プロフィール画像</h3>
+                <p className="text-sm text-muted-foreground">JPG、PNGまたはGIF。最大2MB。</p>
               </div>
             </div>
 
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="space-y-2">
-                <Label htmlFor="nickname">Nickname</Label>
-                <Input id="nickname" defaultValue="GamerUser" />
+                <Label htmlFor="nickname">ニックネーム</Label>
+                <Input id="nickname" defaultValue="ゲーマーユーザー" />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="email">メールアドレス</Label>
                 <Input id="email" type="email" defaultValue="gamer@example.com" />
               </div>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="bio">Bio</Label>
-              <Input id="bio" placeholder="Tell others about yourself..." />
+              <Label htmlFor="bio">自己紹介</Label>
+              <Input id="bio" placeholder="あなたについて教えてください..." />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="favoriteGame">Favorite Game</Label>
+              <Label htmlFor="favoriteGame">お気に入りゲーム</Label>
               <Select defaultValue="valorant">
                 <SelectTrigger id="favoriteGame">
                   <SelectValue />
@@ -104,7 +104,7 @@ export default function SettingsPage() {
 
             <Button className="gradient-primary border-0">
               <Save className="w-4 h-4 mr-2" />
-              Save Changes
+              変更を保存
             </Button>
           </CardContent>
         </Card>
@@ -114,26 +114,26 @@ export default function SettingsPage() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Palette className="w-5 h-5 text-accent" />
-              Appearance
+              外観
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
-              <Label>Theme</Label>
+              <Label>テーマ</Label>
               <Select defaultValue="dark">
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="dark">Dark</SelectItem>
-                  <SelectItem value="light">Light</SelectItem>
-                  <SelectItem value="system">System</SelectItem>
+                  <SelectItem value="dark">ダーク</SelectItem>
+                  <SelectItem value="light">ライト</SelectItem>
+                  <SelectItem value="system">システム</SelectItem>
                 </SelectContent>
               </Select>
             </div>
 
             <div className="space-y-2">
-              <Label>Accent Color</Label>
+              <Label>アクセントカラー</Label>
               <div className="flex gap-2">
                 {['bg-purple-500', 'bg-blue-500', 'bg-cyan-500', 'bg-green-500', 'bg-pink-500'].map((color) => (
                   <button
@@ -151,15 +151,15 @@ export default function SettingsPage() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Bell className="w-5 h-5 text-primary" />
-              Notifications
+              通知
             </CardTitle>
-            <CardDescription>Configure how you receive notifications</CardDescription>
+            <CardDescription>通知の受信方法を設定</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex items-center justify-between p-4 rounded-lg bg-secondary/30">
               <div>
-                <p className="font-medium">Friend Online Alerts</p>
-                <p className="text-sm text-muted-foreground">Get notified when friends come online</p>
+                <p className="font-medium">フレンドオンライン通知</p>
+                <p className="text-sm text-muted-foreground">フレンドがオンラインになったときに通知</p>
               </div>
               <Switch 
                 checked={notifications.friendOnline}
@@ -169,8 +169,8 @@ export default function SettingsPage() {
 
             <div className="flex items-center justify-between p-4 rounded-lg bg-secondary/30">
               <div>
-                <p className="font-medium">Session Reminders</p>
-                <p className="text-sm text-muted-foreground">Remind to log sessions after gaming</p>
+                <p className="font-medium">セッションリマインダー</p>
+                <p className="text-sm text-muted-foreground">ゲーム後にセッションを記録するようリマインド</p>
               </div>
               <Switch 
                 checked={notifications.sessionReminders}
@@ -180,8 +180,8 @@ export default function SettingsPage() {
 
             <div className="flex items-center justify-between p-4 rounded-lg bg-secondary/30">
               <div>
-                <p className="font-medium">Weekly Report</p>
-                <p className="text-sm text-muted-foreground">Receive weekly gaming activity summary</p>
+                <p className="font-medium">週間レポート</p>
+                <p className="text-sm text-muted-foreground">週間ゲームアクティビティサマリーを受信</p>
               </div>
               <Switch 
                 checked={notifications.weeklyReport}
@@ -191,8 +191,8 @@ export default function SettingsPage() {
 
             <div className="flex items-center justify-between p-4 rounded-lg bg-secondary/30">
               <div>
-                <p className="font-medium">Inactive Friend Alerts</p>
-                <p className="text-sm text-muted-foreground">Alert when friends have been inactive</p>
+                <p className="font-medium">非アクティブフレンド通知</p>
+                <p className="text-sm text-muted-foreground">フレンドが非アクティブのときに通知</p>
               </div>
               <Switch 
                 checked={notifications.inactiveAlerts}
@@ -207,22 +207,22 @@ export default function SettingsPage() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Shield className="w-5 h-5 text-accent" />
-              Security
+              セキュリティ
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <Button variant="outline" className="w-full justify-start">
-              Change Password
+              パスワード変更
             </Button>
             <Button variant="outline" className="w-full justify-start">
-              Two-Factor Authentication
+              二要素認証
             </Button>
             <Button variant="outline" className="w-full justify-start">
-              Connected Accounts
+              連携アカウント
             </Button>
             <div className="pt-4 border-t border-border">
               <Button variant="destructive" className="w-full">
-                Delete Account
+                アカウント削除
               </Button>
             </div>
           </CardContent>

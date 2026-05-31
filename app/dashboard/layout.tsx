@@ -20,12 +20,12 @@ import {
 import { useState } from 'react'
 
 const navigation = [
-  { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
-  { name: 'Friends', href: '/dashboard/friends', icon: Users },
-  { name: 'Add Session', href: '/dashboard/add-session', icon: PlusCircle },
-  { name: 'Rankings', href: '/dashboard/rankings', icon: Trophy },
-  { name: 'Network View', href: '/dashboard/network', icon: Network },
-  { name: 'Settings', href: '/dashboard/settings', icon: Settings },
+  { name: 'ダッシュボード', href: '/dashboard', icon: LayoutDashboard },
+  { name: 'フレンド一覧', href: '/dashboard/friends', icon: Users },
+  { name: 'プレイ記録追加', href: '/dashboard/add-session', icon: PlusCircle },
+  { name: 'ランキング', href: '/dashboard/rankings', icon: Trophy },
+  { name: '関係図', href: '/dashboard/network', icon: Network },
+  { name: '設定', href: '/dashboard/settings', icon: Settings },
 ]
 
 export default function DashboardLayout({
@@ -58,7 +58,7 @@ export default function DashboardLayout({
               <div className="w-8 h-8 rounded-lg gradient-primary flex items-center justify-center">
                 <Gamepad2 className="w-5 h-5 text-primary-foreground" />
               </div>
-              <span className="font-semibold">Gamee Analyzer</span>
+              <span className="font-semibold">Gamee 分析</span>
             </Link>
             <Button 
               variant="ghost" 
@@ -105,8 +105,8 @@ export default function DashboardLayout({
                 <AvatarFallback>GU</AvatarFallback>
               </Avatar>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium truncate">GamerUser</p>
-                <p className="text-xs text-muted-foreground truncate">Pro Player</p>
+                <p className="text-sm font-medium truncate">ゲーマーユーザー</p>
+                <p className="text-xs text-muted-foreground truncate">プロプレイヤー</p>
               </div>
               <Button variant="ghost" size="icon" className="flex-shrink-0" asChild>
                 <Link href="/">
