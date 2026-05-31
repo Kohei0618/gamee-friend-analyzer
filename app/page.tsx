@@ -3,13 +3,13 @@
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { 
-  Users, 
-  BarChart3, 
-  Trophy, 
-  Network, 
-  Gamepad2, 
-  Clock, 
+import {
+  Users,
+  BarChart3,
+  Trophy,
+  Network,
+  Gamepad2,
+  Clock,
   TrendingUp,
   ArrowRight,
   ChevronRight
@@ -55,7 +55,7 @@ export default function LandingPage() {
             <div className="w-8 h-8 rounded-lg gradient-primary flex items-center justify-center">
               <Gamepad2 className="w-5 h-5 text-primary-foreground" />
             </div>
-            <span className="font-semibold text-lg">Gamee フレンド分析</span>
+            <span className="font-semibold text-lg">GameeFriendAnalyzer</span>
           </Link>
           <div className="flex items-center gap-4">
             <Link href="/login">
@@ -75,7 +75,7 @@ export default function LandingPage() {
           <div className="absolute -top-40 -right-40 w-80 h-80 bg-primary/20 rounded-full blur-3xl" />
           <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-accent/20 rounded-full blur-3xl" />
         </div>
-        
+
         <div className="container mx-auto px-4 relative">
           <div className="max-w-3xl mx-auto text-center">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-border bg-secondary/50 text-sm text-muted-foreground mb-6">
