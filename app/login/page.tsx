@@ -48,7 +48,7 @@ export default function LoginPage() {
               </div>
             </div>
             <CardTitle className="text-2xl">おかえりなさい</CardTitle>
-            <CardDescription>Gamee フレンド分析アカウントにサインイン</CardDescription>
+            <CardDescription>GameeFriendAnalyzerアカウントにサインイン</CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">

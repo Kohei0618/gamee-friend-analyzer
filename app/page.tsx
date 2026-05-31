@@ -272,7 +272,7 @@ export default function LandingPage() {
               <div className="w-6 h-6 rounded-md gradient-primary flex items-center justify-center">
                 <Gamepad2 className="w-4 h-4 text-primary-foreground" />
               </div>
-              <span className="text-sm text-muted-foreground">Gamee フレンド分析</span>
+              <span className="text-sm text-muted-foreground">GameeFriendAnalyzer</span>
             </div>
             <div className="flex items-center gap-6 text-sm text-muted-foreground">
               <Link href="#" className="hover:text-foreground transition-colors">プライバシー</Link>
@@ -280,7 +280,7 @@ export default function LandingPage() {
               <Link href="#" className="hover:text-foreground transition-colors">サポート</Link>
             </div>
             <div className="text-sm text-muted-foreground">
-              {new Date().getFullYear()} Gamee フレンド分析
+              {new Date().getFullYear()} GameeFriendAnalyzer
             </div>
           </div>
         </div>

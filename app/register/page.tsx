@@ -48,7 +48,7 @@ export default function RegisterPage() {
               </div>
             </div>
             <CardTitle className="text-2xl">アカウント作成</CardTitle>
-            <CardDescription>Gamee フレンド分析に参加して追跡を始めましょう</CardDescription>
+            <CardDescription>GameeFriendAnalyzerに参加して追跡を始めましょう</CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
