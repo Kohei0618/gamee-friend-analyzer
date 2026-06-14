@@ -17,32 +17,25 @@ import {
 
 const features = [
   {
-    icon: BarChart3,
-    title: 'フレンド分析',
-    description: '各フレンドとのゲームセッションの詳細な統計を追跡します。'
+    icon: Users,
+    title: 'フレンド管理',
+    description: 'ゲーム仲間を登録して管理できます。'
   },
   {
     icon: Clock,
     title: 'セッション記録',
-    description: 'プレイ時間、ゲーム、メモを含むすべてのゲームセッションを記録します。'
+    description: '誰と何を遊んだかを記録できます。'
   },
   {
     icon: Trophy,
     title: 'フレンドランキング',
-    description: 'プレイ頻度に基づいてトップのゲーム仲間を確認します。'
+    description: 'よく遊ぶ仲間をランキング表示します。'
   },
   {
-    icon: Network,
-    title: '関係ネットワーク',
-    description: '繋がりを可視化し、共通のゲームフレンドを発見します。'
+    icon: BarChart3,
+    title: 'プレイ履歴',
+    description: '過去のセッションをいつでも振り返れます。'
   }
-]
-
-const stats = [
-  { value: '10K+', label: 'アクティブユーザー' },
-  { value: '50K+', label: '記録セッション' },
-  { value: '100+', label: '対応ゲーム' },
-  { value: '99.9%', label: '稼働率' }
 ]
 
 export default function LandingPage() {
@@ -80,18 +73,15 @@ export default function LandingPage() {
           <div className="max-w-3xl mx-auto text-center">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-border bg-secondary/50 text-sm text-muted-foreground mb-6">
               <TrendingUp className="w-4 h-4 text-accent" />
-              <span>ゲーミングジャーニーを追跡</span>
+              <span>ゲーム仲間との思い出</span>
             </div>
             <h1 className="text-4xl md:text-6xl font-bold mb-6 text-balance leading-tight">
-              あなたの{' '}
               <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-                ゲームフレンドシップ
+                また一緒に遊ぼう
               </span>
-              {' '}を分析
             </h1>
             <p className="text-lg md:text-xl text-muted-foreground mb-8 text-pretty max-w-2xl mx-auto">
-              セッションを追跡し、ゲーム仲間をランキングし、ソーシャルゲーミングネットワークを可視化。
-              誰と一番遊んでいるかを把握し、ゲームフレンドとの繋がりを維持しましょう。
+              ゲーム仲間との時間を記録するアプリ
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link href="/register">
@@ -110,31 +100,18 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Stats Section */}
-      <section className="py-12 border-y border-border/50 bg-secondary/30">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            {stats.map((stat) => (
-              <div key={stat.label} className="text-center">
-                <div className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-                  {stat.value}
-                </div>
-                <div className="text-sm text-muted-foreground mt-1">{stat.label}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* Features Section */}
       <section className="py-20 md:py-28">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold mb-4 text-balance">
-              ゲームを追跡するために必要なすべて
+              ゲーム仲間との記録を、ひとつの場所に。
             </h2>
             <p className="text-muted-foreground max-w-2xl mx-auto text-pretty">
-              ゲームソーシャルライフを管理し、フレンドとの繋がりを維持するための包括的なツール。
+              誰と遊んだか、
+              何を遊んだか、
+              どれくらい一緒に遊んだか。
+              あとで振り返れるように記録します。
             </p>
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -163,18 +140,19 @@ export default function LandingPage() {
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div>
               <h2 className="text-3xl md:text-4xl font-bold mb-4 text-balance">
-                パワフルなダッシュボードを手元に
+                あとから振り返れる記録帳。
               </h2>
               <p className="text-muted-foreground mb-6 text-pretty">
-                ゲームアクティビティの即座のインサイトを取得。トップフレンド、
-                最近のセッション、ゲーム統計をすべて一箇所で確認できます。
+                最近のセッションや、
+                よく遊ぶフレンド、
+                累計プレイ時間を確認できます。
               </p>
               <ul className="space-y-3">
                 {[
-                  'リアルタイムフレンドステータス追跡',
-                  '詳細なセッション履歴とメモ',
-                  'スマートなフレンドレコメンデーション',
-                  'いつでもゲームデータをエクスポート'
+                  '誰と遊んだかを記録',
+                  '何を遊んだかを記録',
+                  'プレイ時間を記録',
+                  'よく遊ぶフレンドを確認'
                 ].map((item) => (
                   <li key={item} className="flex items-center gap-3 text-muted-foreground">
                     <div className="w-5 h-5 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0">
@@ -245,14 +223,15 @@ export default function LandingPage() {
           <Card className="gradient-primary border-0 overflow-hidden relative">
             <CardContent className="py-12 px-6 md:px-12 text-center relative z-10">
               <h2 className="text-2xl md:text-3xl font-bold mb-4 text-primary-foreground text-balance">
-                ゲームソーシャルライフをレベルアップする準備はできましたか？
+                次に「久しぶり！」と言われても大丈夫。
               </h2>
               <p className="text-primary-foreground/80 mb-8 max-w-xl mx-auto text-pretty">
-                すでに何千人ものゲーマーがゲームフレンドシップを追跡しています。
+                ゲーム仲間との時間を、
+                あなた自身のために記録しておきましょう。
               </p>
               <Link href="/register">
                 <Button size="lg" variant="secondary" className="bg-background text-foreground hover:bg-background/90">
-                  無料アカウントを作成
+                  記録を始める
                   <ArrowRight className="w-4 h-4 ml-2" />
                 </Button>
               </Link>
