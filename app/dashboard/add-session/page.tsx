@@ -1,5 +1,7 @@
 'use client'
 
+import { useEffect } from 'react'
+import { supabase } from '@/lib/supabase'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
@@ -24,34 +26,87 @@ import {
   Save,
   CheckCircle
 } from 'lucide-react'
-import { friends, games } from '@/lib/mock-data'
 
 export default function AddSessionPage() {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
   const [showSuccess, setShowSuccess] = useState(false)
+  const [friends, setFriends] = useState<any[]>([])
+  const [games, setGames] = useState<any[]>([])
   const [formData, setFormData] = useState({
     friendId: '',
-    game: '',
+    gameId: '',
     date: new Date().toISOString().split('T')[0],
     duration: '',
     voiceChat: false,
     notes: ''
   })
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsLoading(true)
-    
-    // Simulate saving
-    setTimeout(() => {
-      setIsLoading(false)
-      setShowSuccess(true)
-      setTimeout(() => {
-        router.push('/dashboard')
-      }, 1500)
-    }, 1000)
+useEffect(() => {
+  fetchMasterData()
+}, [])
+
+const fetchMasterData = async () => {
+  const {
+    data: { user }
+  } = await supabase.auth.getUser()
+
+  if (!user) return
+
+  const { data: friendsData } = await supabase
+    .from('friends')
+    .select('*')
+    .eq('user_id', user.id)
+    .order('name')
+
+  const { data: gamesData } = await supabase
+    .from('games')
+    .select('*')
+    .order('name')
+
+  setFriends(friendsData || [])
+  setGames(gamesData || [])
+}
+
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault()
+
+  setIsLoading(true)
+
+  const {
+    data: { user }
+  } = await supabase.auth.getUser()
+
+  if (!user) {
+    setIsLoading(false)
+    return
   }
+
+  const { error } = await supabase
+    .from('play_sessions')
+    .insert({
+      user_id: user.id,
+      friend_id: formData.friendId,
+      game_id: formData.gameId,
+      played_at: formData.date,
+      duration_minutes: Number(formData.duration),
+      vc_used: formData.voiceChat,
+      memo: formData.notes,
+    })
+
+  if (error) {
+    console.error(error)
+    setIsLoading(false)
+    return
+  }
+
+  setIsLoading(false)
+  setShowSuccess(true)
+
+  setTimeout(() => {
+    router.push('/dashboard')
+  }, 1500)
+}
 
   if (showSuccess) {
     return (
@@ -114,16 +169,19 @@ export default function AddSessionPage() {
                 ゲーム
               </Label>
               <Select 
-                value={formData.game} 
-                onValueChange={(value) => setFormData(prev => ({ ...prev, game: value }))}
+                value={formData.gameId} 
+                onValueChange={(value) => setFormData(prev => ({ ...prev, gameId: value }))}
               >
                 <SelectTrigger id="game">
                   <SelectValue placeholder="ゲームを選択" />
                 </SelectTrigger>
                 <SelectContent>
                   {games.map((game) => (
-                    <SelectItem key={game} value={game}>
-                      {game}
+                    <SelectItem
+                      key={game.id}
+                      value={game.id}
+                    >
+                      {game.name}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -192,7 +250,7 @@ export default function AddSessionPage() {
             <Button 
               type="submit" 
               className="w-full gradient-primary border-0"
-              disabled={isLoading || !formData.friendId || !formData.game || !formData.duration}
+              disabled={isLoading || !formData.friendId || !formData.gameId || !formData.duration}
             >
               {isLoading ? (
                 '保存中...'

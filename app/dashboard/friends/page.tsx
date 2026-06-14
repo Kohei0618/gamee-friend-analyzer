@@ -1,150 +1,186 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
+import { supabase } from '@/lib/supabase'
+
 import { Card, CardContent } from '@/components/ui/card'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
-import { 
-  Search, 
-  Filter,
-  Gamepad2,
-  Clock,
+  Search,
   Eye,
-  Trash2
+  Trash2,
+  Plus,
+  MessageSquare,
 } from 'lucide-react'
-import { friends, type Friend } from '@/lib/mock-data'
+
+type Friend = {
+  id: string
+  user_id: string
+  name: string
+  avatar_url: string | null
+  memo: string | null
+  created_at: string
+  updated_at: string
+}
 
 export default function FriendsPage() {
+  const [friends, setFriends] = useState<Friend[]>([])
   const [searchQuery, setSearchQuery] = useState('')
-  const [statusFilter, setStatusFilter] = useState<string>('all')
+  const [isLoading, setIsLoading] = useState(true)
 
-  const filteredFriends = friends.filter((friend) => {
-    const matchesSearch = friend.name.toLowerCase().includes(searchQuery.toLowerCase())
-    const matchesStatus = statusFilter === 'all' || friend.status === statusFilter
-    return matchesSearch && matchesStatus
-  })
+  useEffect(() => {
+    fetchFriends()
+  }, [])
 
-  const getStatusColor = (status: Friend['status']) => {
-    switch (status) {
-      case 'online':
-        return 'bg-green-500'
-      case 'in-game':
-        return 'bg-primary'
-      case 'offline':
-        return 'bg-muted-foreground'
-      default:
-        return 'bg-muted-foreground'
+  const fetchFriends = async () => {
+    setIsLoading(true)
+
+    const {
+      data: { user },
+    } = await supabase.auth.getUser()
+
+    if (!user) {
+      setIsLoading(false)
+      return
     }
+
+    const { data, error } = await supabase
+      .from('friends')
+      .select('*')
+      .eq('user_id', user.id)
+      .order('created_at', { ascending: false })
+
+    if (error) {
+      console.error(error)
+      setIsLoading(false)
+      return
+    }
+
+    setFriends(data || [])
+    setIsLoading(false)
   }
 
-  const getStatusLabel = (status: Friend['status']) => {
-    switch (status) {
-      case 'online':
-        return 'オンライン'
-      case 'in-game':
-        return 'ゲーム中'
-      case 'offline':
-        return 'オフライン'
-      default:
-        return status
+  const handleDelete = async (friendId: string) => {
+    const confirmed = window.confirm('このフレンドを削除しますか？')
+
+    if (!confirmed) return
+
+    const { error } = await supabase
+      .from('friends')
+      .delete()
+      .eq('id', friendId)
+
+    if (error) {
+      console.error(error)
+      return
     }
+
+    setFriends((prev) => prev.filter((friend) => friend.id !== friendId))
   }
+
+  const filteredFriends = friends.filter((friend) =>
+    friend.name.toLowerCase().includes(searchQuery.toLowerCase())
+  )
 
   return (
     <div className="p-6 space-y-6">
-      {/* Page Header */}
-      <div>
-        <h1 className="text-2xl font-bold">フレンド一覧</h1>
-        <p className="text-muted-foreground">ゲームフレンドを管理する</p>
-      </div>
-
-      {/* Filters */}
-      <div className="flex flex-col sm:flex-row gap-4">
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-          <Input
-            placeholder="フレンドを検索..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-10"
-          />
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-bold">フレンド一覧</h1>
+          <p className="text-muted-foreground">ゲームフレンドを管理する</p>
         </div>
-        <Select value={statusFilter} onValueChange={setStatusFilter}>
-          <SelectTrigger className="w-full sm:w-[180px]">
-            <Filter className="w-4 h-4 mr-2" />
-            <SelectValue placeholder="ステータスで絞り込み" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">すべてのステータス</SelectItem>
-            <SelectItem value="online">オンライン</SelectItem>
-            <SelectItem value="in-game">ゲーム中</SelectItem>
-            <SelectItem value="offline">オフライン</SelectItem>
-          </SelectContent>
-        </Select>
+
+        <Button asChild className="gradient-primary border-0">
+          <Link href="/dashboard/friends/new">
+            <Plus className="w-4 h-4 mr-2" />
+            フレンド追加
+          </Link>
+        </Button>
       </div>
 
-      {/* Friends Grid */}
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {filteredFriends.map((friend) => (
-          <Card key={friend.id} className="bg-card/50 border-border/50 hover:border-primary/50 transition-colors">
-            <CardContent className="p-6">
-              <div className="flex items-start gap-4">
-                <div className="relative">
-                  <Avatar className="w-14 h-14">
-                    <AvatarImage src={friend.avatar} />
-                    <AvatarFallback>{friend.name.slice(0, 2)}</AvatarFallback>
-                  </Avatar>
-                  <div className={`absolute -bottom-1 -right-1 w-4 h-4 rounded-full border-2 border-card ${getStatusColor(friend.status)}`} />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <h3 className="font-semibold truncate">{friend.name}</h3>
-                  <Badge variant="secondary" className="text-xs mt-1">
-                    {getStatusLabel(friend.status)}
-                  </Badge>
-                </div>
-              </div>
-
-              <div className="mt-4 space-y-2">
-                <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                  <Gamepad2 className="w-4 h-4" />
-                  <span>{friend.playCount} セッション</span>
-                </div>
-                <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                  <Clock className="w-4 h-4" />
-                  <span>最終: {friend.lastPlayed}</span>
-                </div>
-              </div>
-
-              <div className="mt-4 flex gap-2">
-                <Button asChild variant="outline" size="sm" className="flex-1">
-                  <Link href={`/dashboard/friends/${friend.id}`}>
-                    <Eye className="w-4 h-4 mr-1" />
-                    詳細
-                  </Link>
-                </Button>
-                <Button variant="ghost" size="sm" className="text-destructive hover:text-destructive hover:bg-destructive/10">
-                  <Trash2 className="w-4 h-4" />
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
+      <div className="relative max-w-xl">
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+        <Input
+          placeholder="フレンドを検索..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="pl-10"
+        />
       </div>
 
-      {filteredFriends.length === 0 && (
+      {isLoading ? (
         <div className="text-center py-12">
-          <p className="text-muted-foreground">条件に一致するフレンドが見つかりませんでした。</p>
+          <p className="text-muted-foreground">読み込み中...</p>
         </div>
+      ) : (
+        <>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {filteredFriends.map((friend) => (
+              <Card
+                key={friend.id}
+                className="bg-card/50 border-border/50 hover:border-primary/50 transition-colors"
+              >
+                <CardContent className="p-6">
+                  <div className="flex items-start gap-4">
+                    <Avatar className="w-14 h-14">
+                      <AvatarImage src={friend.avatar_url || ''} />
+                      <AvatarFallback>
+                        {friend.name.slice(0, 2)}
+                      </AvatarFallback>
+                    </Avatar>
+
+                    <div className="flex-1 min-w-0">
+                      <h3 className="font-semibold truncate">
+                        {friend.name}
+                      </h3>
+
+                      <p className="text-xs text-muted-foreground mt-1">
+                        登録日: {new Date(friend.created_at).toLocaleDateString('ja-JP')}
+                      </p>
+                    </div>
+                  </div>
+
+                  {friend.memo && (
+                    <div className="mt-4 flex gap-2 text-sm text-muted-foreground">
+                      <MessageSquare className="w-4 h-4 shrink-0 mt-0.5" />
+                      <p className="line-clamp-2">{friend.memo}</p>
+                    </div>
+                  )}
+
+                  <div className="mt-4 flex gap-2">
+                    <Button asChild variant="outline" size="sm" className="flex-1">
+                      <Link href={`/dashboard/friends/${friend.id}`}>
+                        <Eye className="w-4 h-4 mr-1" />
+                        詳細
+                      </Link>
+                    </Button>
+
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                      onClick={() => handleDelete(friend.id)}
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+
+          {filteredFriends.length === 0 && (
+            <div className="text-center py-12">
+              <p className="text-muted-foreground">
+                条件に一致するフレンドが見つかりませんでした。
+              </p>
+            </div>
+          )}
+        </>
       )}
     </div>
   )

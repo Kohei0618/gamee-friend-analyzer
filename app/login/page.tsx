@@ -8,19 +8,34 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Gamepad2, ArrowLeft, Mail, Lock } from 'lucide-react'
+import { supabase } from '@/lib/supabase'
 
 export default function LoginPage() {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [error, setError] = useState('')
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsLoading(true)
-    // Simulate login
-    setTimeout(() => {
-      router.push('/dashboard')
-    }, 1000)
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault()
+
+  setIsLoading(true)
+  setError('')
+
+  const { error } = await supabase.auth.signInWithPassword({
+    email,
+    password,
+  })
+
+  if (error) {
+    setError(error.message)
+    setIsLoading(false)
+    return
   }
+
+  router.push('/dashboard')
+}
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -51,6 +66,11 @@ export default function LoginPage() {
             <CardDescription>GameeFriendAnalyzerアカウントにサインイン</CardDescription>
           </CardHeader>
           <CardContent>
+            {error && (
+              <p className="text-red-500 text-sm mb-4">
+                {error}
+              </p>
+            )}
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="email">メールアドレス</Label>
@@ -59,6 +79,8 @@ export default function LoginPage() {
                   <Input
                     id="email"
                     type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                     placeholder="gamer@example.com"
                     className="pl-10"
                     required
@@ -77,6 +99,8 @@ export default function LoginPage() {
                   <Input
                     id="password"
                     type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
                     placeholder="パスワードを入力"
                     className="pl-10"
                     required

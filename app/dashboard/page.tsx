@@ -1,5 +1,7 @@
 'use client'
 
+import { useEffect, useState } from 'react'
+import { supabase } from '@/lib/supabase'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
@@ -23,9 +25,7 @@ import {
   RefreshCw
 } from 'lucide-react'
 import { 
-  stats, 
   getTopFriends, 
-  getRecentActivity, 
   monthlySessionData,
   gamesPlayedData,
   activityHeatmapData,
@@ -45,9 +45,6 @@ import {
   ResponsiveContainer,
   Cell,
 } from 'recharts'
-
-const topFriends = getTopFriends(5)
-const recentActivity = getRecentActivity(4)
 
 const getTimelineIcon = (iconName: string) => {
   switch (iconName) {
@@ -93,8 +90,188 @@ const monthlySessionDataJa = [
   { month: '1月', sessions: 42, hours: 98 },
 ]
 
+type RecentSession = {
+  id: string
+  friendName: string
+  game: string
+  duration: number | null
+  date: string
+}
+
 export default function DashboardPage() {
-  return (
+  type TopFriend = {
+    id: string
+    name: string
+    avatar_url: string | null
+    playCount: number
+  }
+
+  const [topFriends, setTopFriends] = useState<TopFriend[]>([])
+
+  const [recentActivity, setRecentActivity] = useState<RecentSession[]>([])
+
+  const [stats, setStats] = useState({
+    totalFriends: 0,
+    totalSessions: 0,
+    totalHours: 0,
+    thisWeekSessions: 0,
+  })
+
+  const fetchDashboardStats = async () => {
+
+  const {
+    data: { user }
+  } = await supabase.auth.getUser()
+
+  if (!user) return
+
+  // フレンド数
+  const { count: totalFriends } = await supabase
+    .from('friends')
+    .select('*', { count: 'exact', head: true })
+    .eq('user_id', user.id)
+
+  // セッション数
+  const { count: totalSessions } = await supabase
+    .from('play_sessions')
+    .select('*', { count: 'exact', head: true })
+    .eq('user_id', user.id)
+
+  // プレイ時間
+  const { data: sessions } = await supabase
+    .from('play_sessions')
+    .select('duration_minutes')
+    .eq('user_id', user.id)
+
+  const totalHours =
+    (sessions || []).reduce(
+      (sum, session) =>
+        sum + (session.duration_minutes || 0),
+      0
+    ) / 60
+
+  // 今週のセッション
+  const startOfWeek = new Date()
+  startOfWeek.setDate(
+    startOfWeek.getDate() - startOfWeek.getDay()
+  )
+
+  const { count: thisWeekSessions } = await supabase
+    .from('play_sessions')
+    .select('*', { count: 'exact', head: true })
+    .eq('user_id', user.id)
+    .gte(
+      'played_at',
+      startOfWeek.toISOString().split('T')[0]
+    )
+
+  setStats({
+    totalFriends: totalFriends || 0,
+    totalSessions: totalSessions || 0,
+    totalHours: Math.round(totalHours),
+    thisWeekSessions: thisWeekSessions || 0,
+  })
+}
+
+const fetchRecentActivity = async () => {
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+
+  if (!user) return
+
+  const { data, error } = await supabase
+    .from('play_sessions')
+    .select(`
+      id,
+      played_at,
+      duration_minutes,
+      friends (
+        name
+      ),
+      games (
+        name
+      )
+    `)
+    .eq('user_id', user.id)
+    .order('played_at', { ascending: false })
+    .limit(4)
+
+  if (error) {
+    console.error(error)
+    return
+  }
+
+  const formatted = (data || []).map((session: any) => ({
+    id: session.id,
+    friendName: session.friends?.name || '不明なフレンド',
+    game: session.games?.name || '不明なゲーム',
+    duration: session.duration_minutes,
+    date: session.played_at,
+  }))
+
+  setRecentActivity(formatted)
+}
+
+const fetchTopFriends = async () => {
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+
+  if (!user) return
+
+  const { data, error } = await supabase
+    .from('play_sessions')
+    .select(`
+      friend_id,
+      friends (
+        id,
+        name,
+        avatar_url
+      )
+    `)
+    .eq('user_id', user.id)
+
+  if (error) {
+    console.error(error)
+    return
+  }
+
+  const rankingMap = new Map<string, TopFriend>()
+
+  ;(data || []).forEach((session: any) => {
+    const friend = session.friends
+
+    if (!friend) return
+
+    const current = rankingMap.get(friend.id)
+
+    if (current) {
+      current.playCount += 1
+    } else {
+      rankingMap.set(friend.id, {
+        id: friend.id,
+        name: friend.name,
+        avatar_url: friend.avatar_url,
+        playCount: 1,
+      })
+    }
+  })
+
+  const ranking = Array.from(rankingMap.values())
+    .sort((a, b) => b.playCount - a.playCount)
+    .slice(0, 5)
+
+  setTopFriends(ranking)
+}
+
+useEffect(() => {
+  fetchDashboardStats()
+  fetchRecentActivity()
+  fetchTopFriends()
+}, [])
+
+return (
     <div className="p-4 md:p-6 space-y-6">
       {/* Page Header with Quick Actions */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
@@ -104,7 +281,7 @@ export default function DashboardPage() {
         </div>
         <div className="flex gap-2">
           <Button asChild variant="outline" className="gap-2">
-            <Link href="/dashboard/friends">
+            <Link href="/dashboard/friends/new">
               <UserPlus className="w-4 h-4" />
               フレンド追加
             </Link>
@@ -363,12 +540,14 @@ export default function DashboardPage() {
                   {index + 1}
                 </div>
                 <Avatar className="w-9 h-9 border-2 border-transparent group-hover:border-primary/50 transition-colors">
-                  <AvatarImage src={friend.avatar} />
+                  <AvatarImage src={friend.avatar_url || ''} />
                   <AvatarFallback>{friend.name.slice(0, 2)}</AvatarFallback>
                 </Avatar>
                 <div className="flex-1 min-w-0">
                   <p className="font-medium text-sm truncate group-hover:text-primary transition-colors">{friend.name}</p>
-                  <p className="text-xs text-muted-foreground truncate">{friend.favoriteGame}</p>
+                  <p className="text-xs text-muted-foreground truncate">
+                    一緒に遊んだ回数
+                  </p>
                 </div>
                 <div className="text-right shrink-0">
                   <p className="font-bold text-sm">{friend.playCount}</p>
@@ -502,7 +681,9 @@ export default function DashboardPage() {
                     <Badge variant="outline" className="text-xs">
                       {session.duration}分
                     </Badge>
-                    <p className="text-[10px] text-muted-foreground mt-1">{session.date}</p>
+                    <p className="text-[10px] text-muted-foreground mt-1">
+                      {new Date(session.date).toLocaleDateString('ja-JP')}
+                    </p>
                   </div>
                 </div>
               ))}
