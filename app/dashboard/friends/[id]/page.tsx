@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { supabase } from '@/lib/supabase'
+import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
 
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
@@ -57,8 +59,13 @@ export default function FriendDetailPage() {
   const [friend, setFriend] = useState<Friend | null>(null)
   const [sessions, setSessions] = useState<Session[]>([])
   const [isLoading, setIsLoading] = useState(true)
+  const [isEditing, setIsEditing] = useState(false)
 
-  const totalSessions = sessions.length
+  const [editName, setEditName] = useState('')
+  const [editMemo, setEditMemo] = useState('')
+  const [editAvatarUrl, setEditAvatarUrl] = useState('')
+
+const totalSessions = sessions.length
   const totalMinutes = sessions.reduce(
     (sum, session) => sum + (session.duration_minutes || 0),
     0
@@ -146,10 +153,44 @@ export default function FriendDetailPage() {
     }
 
     setFriend(friendData)
+
+    setEditName(friendData.name || '')
+    setEditMemo(friendData.memo || '')
+    setEditAvatarUrl(friendData.avatar_url || '')
+
     setSessions(sessionData || [])
     setIsLoading(false)
   }
 
+  const handleUpdateFriend = async () => {
+  if (!friend) return
+
+  const { error } = await supabase
+    .from('friends')
+    .update({
+      name: editName,
+      memo: editMemo,
+      avatar_url: editAvatarUrl || null,
+      updated_at: new Date().toISOString(),
+    })
+    .eq('id', friend.id)
+
+  if (error) {
+    console.error(error)
+    alert('フレンド情報の更新に失敗しました')
+    return
+  }
+
+  setFriend({
+    ...friend,
+    name: editName,
+    memo: editMemo,
+    avatar_url: editAvatarUrl || null,
+    updated_at: new Date().toISOString(),
+  })
+
+  setIsEditing(false)
+}
 
   const handleDeleteSession = async (sessionId: string) => {
     const confirmed = window.confirm('このセッション記録を削除しますか？')
@@ -207,15 +248,64 @@ export default function FriendDetailPage() {
             </Avatar>
 
             <div className="flex-1">
+            {isEditing ? (
+              <Input
+                value={editName}
+                onChange={(e) => setEditName(e.target.value)}
+                className="text-lg font-bold"
+              />
+            ) : (
               <h1 className="text-2xl font-bold">{friend.name}</h1>
+            )}
               <p className="text-sm text-muted-foreground">
                 登録日: {new Date(friend.created_at).toLocaleDateString('ja-JP')}
               </p>
 
               {friend.memo && (
                 <div className="flex gap-2 mt-4 text-sm text-muted-foreground">
-                  <MessageSquare className="w-4 h-4 shrink-0 mt-0.5" />
-                  <p>{friend.memo}</p>
+                  {isEditing ? (
+                    <Textarea
+                      value={editMemo}
+                      onChange={(e) => setEditMemo(e.target.value)}
+                      placeholder="メモを入力"
+                      rows={3}
+                      className="mt-4"
+                    />
+                  ) : (
+                    friend.memo && (
+                      <div className="flex gap-2 mt-4 text-sm text-muted-foreground">
+                        <MessageSquare className="w-4 h-4 shrink-0 mt-0.5" />
+                        <p>{friend.memo}</p>
+                      </div>
+                    )
+                  )}
+                  <div className="mt-4 flex gap-2">
+                    {isEditing ? (
+                      <>
+                        <Button onClick={handleUpdateFriend}>
+                          保存
+                        </Button>
+                        <Button
+                          variant="outline"
+                          onClick={() => {
+                            setEditName(friend.name || '')
+                            setEditMemo(friend.memo || '')
+                            setEditAvatarUrl(friend.avatar_url || '')
+                            setIsEditing(false)
+                          }}
+                        >
+                          キャンセル
+                        </Button>
+                      </>
+                    ) : (
+                      <Button
+                        variant="outline"
+                        onClick={() => setIsEditing(true)}
+                      >
+                        編集
+                      </Button>
+                    )}
+                  </div>
                 </div>
               )}
             </div>
