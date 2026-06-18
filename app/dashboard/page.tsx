@@ -110,6 +110,8 @@ export default function DashboardPage() {
 
   const [recentActivity, setRecentActivity] = useState<RecentSession[]>([])
 
+  const [gamesPlayedData, setGamesPlayedData] = useState<any[]>([])
+
   const [stats, setStats] = useState({
     totalFriends: 0,
     totalSessions: 0,
@@ -265,10 +267,64 @@ const fetchTopFriends = async () => {
   setTopFriends(ranking)
 }
 
+const fetchGameRanking = async () => {
+  const {
+    data: { user }
+  } = await supabase.auth.getUser()
+
+  if (!user) return
+
+  const { data, error } = await supabase
+    .from('play_sessions')
+    .select(`
+      duration_minutes,
+      games (
+        id,
+        name
+      )
+    `)
+    .eq('user_id', user.id)
+
+  if (error) {
+    console.error(error)
+    return
+  }
+
+  const gameMap = new Map()
+
+  ;(data || []).forEach((session: any) => {
+    const game = session.games
+
+    if (!game) return
+
+    const current = gameMap.get(game.id)
+
+    if (current) {
+      current.hours += session.duration_minutes
+    } else {
+      gameMap.set(game.id, {
+        name: game.name,
+        hours: session.duration_minutes,
+      })
+    }
+  })
+
+  const ranking = Array.from(gameMap.values())
+    .map((game: any) => ({
+      ...game,
+      hours: Math.round(game.hours / 60)
+    }))
+    .sort((a: any, b: any) => b.hours - a.hours)
+    .slice(0, 5)
+
+  setGamesPlayedData(ranking)
+}
+
 useEffect(() => {
   fetchDashboardStats()
   fetchRecentActivity()
   fetchTopFriends()
+  fetchGameRanking()
 }, [])
 
 return (
