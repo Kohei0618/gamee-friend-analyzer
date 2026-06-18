@@ -41,6 +41,13 @@ type Session = {
   } | null
 }
 
+type GameRanking = {
+  name: string
+  genre: string | null
+  count: number
+  minutes: number
+}
+
 export default function FriendDetailPage() {
   const params = useParams()
   const router = useRouter()
@@ -58,6 +65,32 @@ export default function FriendDetailPage() {
   const totalHours = Math.round(totalMinutes / 60)
 
   const latestSession = sessions[0]
+
+  const gameRankingMap = new Map<string, GameRanking>()
+
+  sessions.forEach((session) => {
+    const gameName = session.games?.name || '不明なゲーム'
+    const genre = session.games?.genre || null
+    const current = gameRankingMap.get(gameName)
+
+    if (current) {
+      current.count += 1
+      current.minutes += session.duration_minutes || 0
+    } else {
+      gameRankingMap.set(gameName, {
+        name: gameName,
+        genre,
+        count: 1,
+        minutes: session.duration_minutes || 0,
+      })
+    }
+  })
+
+  const gameRanking = Array.from(gameRankingMap.values())
+    .sort((a, b) => b.count - a.count)
+    .slice(0, 5)
+
+  const mostPlayedGame = gameRanking[0]
 
   useEffect(() => {
     fetchFriendDetail()
@@ -169,7 +202,7 @@ export default function FriendDetailPage() {
         </CardContent>
       </Card>
 
-      <div className="grid gap-4 sm:grid-cols-3">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <Card className="bg-card/50 border-border/50">
           <CardContent className="p-5">
             <div className="flex items-center justify-between">
@@ -210,8 +243,74 @@ export default function FriendDetailPage() {
             </div>
           </CardContent>
         </Card>
+        <Card className="bg-card/50 border-border/50">
+          <CardContent className="p-5">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-muted-foreground">よく遊ぶゲーム</p>
+                <p className="text-lg font-bold">
+                  {mostPlayedGame ? mostPlayedGame.name : '-'}
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  {mostPlayedGame ? `${mostPlayedGame.count}回` : ''}
+                </p>
+              </div>
+              <Gamepad2 className="w-8 h-8 text-primary" />
+            </div>
+          </CardContent>
+        </Card>
       </div>
 
+      <Card className="bg-card/50 border-border/50">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Gamepad2 className="w-5 h-5" />
+            よく遊ぶゲーム
+          </CardTitle>
+          <CardDescription>
+            このフレンドと一緒に遊んだゲームのランキングです
+          </CardDescription>
+        </CardHeader>
+
+        <CardContent>
+          {gameRanking.length === 0 ? (
+            <p className="text-muted-foreground text-sm">
+              まだゲーム記録がありません。
+            </p>
+          ) : (
+            <div className="space-y-3">
+              {gameRanking.map((game, index) => (
+                <div
+                  key={game.name}
+                  className="flex items-center justify-between p-3 rounded-xl bg-secondary/30"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-full gradient-primary flex items-center justify-center text-sm font-bold text-primary-foreground">
+                      {index + 1}
+                    </div>
+
+                    <div>
+                      <p className="font-medium text-sm">{game.name}</p>
+                      {game.genre && (
+                        <p className="text-xs text-muted-foreground">
+                          {game.genre}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="text-right">
+                    <p className="font-bold text-sm">{game.count}回</p>
+                    <p className="text-xs text-muted-foreground">
+                      {Math.round(game.minutes / 60)}時間
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </CardContent>
+      </Card>
       <Card className="bg-card/50 border-border/50">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
