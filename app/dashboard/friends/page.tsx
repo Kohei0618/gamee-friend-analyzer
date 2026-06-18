@@ -65,7 +65,7 @@ export default function FriendsPage() {
   }
 
   const handleDelete = async (friendId: string) => {
-    const confirmed = window.confirm('このフレンドを削除しますか？')
+    const confirmed = window.confirm('このフレンドを削除しますか？\n関連するセッション履歴も削除されます。')
 
     if (!confirmed) return
 

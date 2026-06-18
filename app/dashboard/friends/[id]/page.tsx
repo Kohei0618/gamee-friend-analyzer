@@ -17,6 +17,7 @@ import {
   Clock,
   Calendar,
   MessageSquare,
+  Trash2,
 } from 'lucide-react'
 
 type Friend = {
@@ -147,6 +148,26 @@ export default function FriendDetailPage() {
     setFriend(friendData)
     setSessions(sessionData || [])
     setIsLoading(false)
+  }
+
+
+  const handleDeleteSession = async (sessionId: string) => {
+    const confirmed = window.confirm('このセッション記録を削除しますか？')
+
+    if (!confirmed) return
+
+    const { error } = await supabase
+      .from('play_sessions')
+      .delete()
+      .eq('id', sessionId)
+
+    if (error) {
+      console.error(error)
+      alert('セッション記録の削除に失敗しました')
+      return
+    }
+
+    setSessions((prev) => prev.filter((session) => session.id !== sessionId))
   }
 
   if (isLoading) {
@@ -354,6 +375,16 @@ export default function FriendDetailPage() {
                   </div>
 
                   <div className="text-right shrink-0 space-y-1">
+
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                      onClick={() => handleDeleteSession(session.id)}
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </Button>
+
                     {session.duration_minutes && (
                       <Badge variant="outline">
                         {session.duration_minutes}分
