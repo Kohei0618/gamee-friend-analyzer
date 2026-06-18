@@ -8,21 +8,64 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Gamepad2, ArrowLeft, Mail, Lock, User } from 'lucide-react'
+import { supabase } from '@/lib/supabase'
 
 export default function RegisterPage() {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
+  const [nickname, setNickname] = useState('')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
+  const [error, setError] = useState('')
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+
     setIsLoading(true)
-    // Simulate registration
-    setTimeout(() => {
-      router.push('/dashboard')
-    }, 1000)
+    setError('')
+
+    if (password !== confirmPassword) {
+      setError('パスワードが一致しません')
+      setIsLoading(false)
+      return
+    }
+
+    const { data, error: signUpError } = await supabase.auth.signUp({
+      email,
+      password,
+    })
+
+    if (signUpError) {
+      setError(signUpError.message)
+      setIsLoading(false)
+      return
+    }
+
+    if (!data.user) {
+      setError('ユーザー登録に失敗しました')
+      setIsLoading(false)
+      return
+    }
+
+    const { error: profileError } = await supabase
+      .from('users')
+      .insert({
+        id: data.user.id,
+        name: nickname,
+      })
+
+    if (profileError) {
+      console.error(profileError)
+      setError('プロフィール登録に失敗しました')
+      setIsLoading(false)
+      return
+    }
+
+    router.push('/login')
   }
 
-  return (
+return (
     <div className="min-h-screen flex flex-col">
       {/* Background effects */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
@@ -51,6 +94,11 @@ export default function RegisterPage() {
             <CardDescription>GameeFriendAnalyzerに参加して追跡を始めましょう</CardDescription>
           </CardHeader>
           <CardContent>
+            {error && (
+              <p className="text-sm text-red-500 mb-4">
+                {error}
+              </p>
+            )}
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="nickname">ニックネーム</Label>
@@ -59,6 +107,8 @@ export default function RegisterPage() {
                   <Input
                     id="nickname"
                     type="text"
+                    value={nickname}
+                    onChange={(e) => setNickname(e.target.value)}
                     placeholder="GamerTag123"
                     className="pl-10"
                     required
@@ -72,6 +122,8 @@ export default function RegisterPage() {
                   <Input
                     id="email"
                     type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                     placeholder="gamer@example.com"
                     className="pl-10"
                     required
@@ -85,6 +137,8 @@ export default function RegisterPage() {
                   <Input
                     id="password"
                     type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
                     placeholder="強力なパスワードを作成"
                     className="pl-10"
                     required
@@ -98,6 +152,8 @@ export default function RegisterPage() {
                   <Input
                     id="confirmPassword"
                     type="password"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
                     placeholder="パスワードを再入力"
                     className="pl-10"
                     required

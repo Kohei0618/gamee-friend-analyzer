@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import { useRouter } from 'next/navigation'
 import { 
   Users, 
   Gamepad2, 
@@ -98,13 +99,17 @@ type RecentSession = {
   date: string
 }
 
+type TopFriend = {
+  id: string
+  name: string
+  avatar_url: string | null
+  playCount: number
+}
+
 export default function DashboardPage() {
-  type TopFriend = {
-    id: string
-    name: string
-    avatar_url: string | null
-    playCount: number
-  }
+
+  const router = useRouter()
+  const [isAuthChecking, setIsAuthChecking] = useState(true)
 
   const [topFriends, setTopFriends] = useState<TopFriend[]>([])
 
@@ -321,11 +326,35 @@ const fetchGameRanking = async () => {
 }
 
 useEffect(() => {
-  fetchDashboardStats()
-  fetchRecentActivity()
-  fetchTopFriends()
-  fetchGameRanking()
+  const checkAuthAndFetchData = async () => {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser()
+
+    if (!user) {
+      setIsAuthChecking(false)
+      router.replace('/login')
+      return
+    }
+
+    await fetchDashboardStats()
+    await fetchRecentActivity()
+    await fetchTopFriends()
+    await fetchGameRanking()
+
+    setIsAuthChecking(false)
+  }
+
+  checkAuthAndFetchData()
 }, [])
+
+if (isAuthChecking) {
+  return (
+    <div className="p-6">
+      <p className="text-muted-foreground">認証確認中...</p>
+    </div>
+  )
+}
 
 return (
     <div className="p-4 md:p-6 space-y-6">
