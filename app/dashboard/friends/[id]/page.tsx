@@ -261,53 +261,53 @@ const totalSessions = sessions.length
                 登録日: {new Date(friend.created_at).toLocaleDateString('ja-JP')}
               </p>
 
-              {friend.memo && (
-                <div className="flex gap-2 mt-4 text-sm text-muted-foreground">
+              <div className="mt-4 space-y-4">
+                {isEditing ? (
+                  <Textarea
+                    value={editMemo}
+                    onChange={(e) => setEditMemo(e.target.value)}
+                    placeholder="メモを入力"
+                    rows={3}
+                  />
+                ) : friend.memo ? (
+                  <div className="flex gap-2 text-sm text-muted-foreground">
+                    <MessageSquare className="w-4 h-4 shrink-0 mt-0.5" />
+                    <p>{friend.memo}</p>
+                  </div>
+                ) : (
+                  <p className="text-sm text-muted-foreground">
+                    メモはまだ登録されていません。
+                  </p>
+                )}
+
+                <div className="flex gap-2">
                   {isEditing ? (
-                    <Textarea
-                      value={editMemo}
-                      onChange={(e) => setEditMemo(e.target.value)}
-                      placeholder="メモを入力"
-                      rows={3}
-                      className="mt-4"
-                    />
-                  ) : (
-                    friend.memo && (
-                      <div className="flex gap-2 mt-4 text-sm text-muted-foreground">
-                        <MessageSquare className="w-4 h-4 shrink-0 mt-0.5" />
-                        <p>{friend.memo}</p>
-                      </div>
-                    )
-                  )}
-                  <div className="mt-4 flex gap-2">
-                    {isEditing ? (
-                      <>
-                        <Button onClick={handleUpdateFriend}>
-                          保存
-                        </Button>
-                        <Button
-                          variant="outline"
-                          onClick={() => {
-                            setEditName(friend.name || '')
-                            setEditMemo(friend.memo || '')
-                            setEditAvatarUrl(friend.avatar_url || '')
-                            setIsEditing(false)
-                          }}
-                        >
-                          キャンセル
-                        </Button>
-                      </>
-                    ) : (
+                    <>
+                      <Button onClick={handleUpdateFriend}>
+                        保存
+                      </Button>
                       <Button
                         variant="outline"
-                        onClick={() => setIsEditing(true)}
+                        onClick={() => {
+                          setEditName(friend.name || '')
+                          setEditMemo(friend.memo || '')
+                          setEditAvatarUrl(friend.avatar_url || '')
+                          setIsEditing(false)
+                        }}
                       >
-                        編集
+                        キャンセル
                       </Button>
-                    )}
-                  </div>
+                    </>
+                  ) : (
+                    <Button
+                      variant="outline"
+                      onClick={() => setIsEditing(true)}
+                    >
+                      編集
+                    </Button>
+                  )}
                 </div>
-              )}
+              </div>
             </div>
           </div>
         </CardContent>
