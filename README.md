@@ -1,33 +1,141 @@
-# gamee-friend-analyzer
+# Gamee Friend Analyzer
 
-This is a [Next.js](https://nextjs.org) project bootstrapped with [v0](https://v0.app).
+ゲーム仲間とのプレイ履歴を記録・管理するWebアプリです。
 
-## Built with v0
+## 概要
 
-This repository is linked to a [v0](https://v0.app) project. You can continue developing by visiting the link below -- start new chats to make changes, and v0 will push commits directly to this repo. Every merge to `main` will automatically deploy.
+ゲーム募集などで久しぶりに一緒に遊ぶ相手に対して、
 
-[Continue working on v0 →](https://v0.app/chat/projects/prj_X21L7qrOVlVqqX4tgzB3I8gIbowv)
+* 前に何を遊んだか
+* どれくらい一緒に遊んだか
+* どんな人だったか
 
-## Getting Started
+を忘れてしまうことがあります。
 
-First, run the development server:
+Gamee Friend Analyzerは、ゲーム仲間とのプレイ履歴やメモを記録することで、過去の交流を振り返りやすくするために開発しました。
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-```
+コンセプトは
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+> また一緒に遊ぼう。
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+です。
 
-## Learn More
+---
 
-To learn more, take a look at the following resources:
+## URL
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-- [v0 Documentation](https://v0.app/docs) - learn about v0 and how to use it.
+デプロイ後に記載
+
+---
+
+## テストアカウント
+
+| 項目      | 内容                                          |
+| ------- | ------------------------------------------- |
+| メールアドレス | [demo@example.com](mailto:demo@example.com) |
+| パスワード   | ********                                    |
+
+---
+
+## 主な機能
+
+### 認証機能
+
+* ユーザー登録
+* ログイン
+* ログアウト
+
+### フレンド管理
+
+* フレンド追加
+* フレンド一覧表示
+* フレンド詳細表示
+* フレンド編集
+* フレンド削除
+
+### プレイ記録管理
+
+* セッション追加
+* セッション一覧表示
+* セッション削除
+
+### 分析機能
+
+* 総フレンド数表示
+* 総セッション数表示
+* 総プレイ時間表示
+* フレンドランキング
+* よくプレイするゲームランキング
+* 最近のプレイ履歴表示
+
+---
+
+## 使用技術
+
+### フロントエンド
+
+* Next.js
+* TypeScript
+* React
+* Tailwind CSS
+* shadcn/ui
+
+### バックエンド
+
+* Supabase
+
+### データベース
+
+* PostgreSQL（Supabase）
+
+### 認証
+
+* Supabase Auth
+
+### グラフ
+
+* Recharts
+
+### デプロイ
+
+* Vercel
+
+---
+
+## ER図
+
+（ER図画像を追加予定）
+
+---
+
+## 工夫した点
+
+### 1. ユーザーごとのデータ分離
+
+SupabaseのRow Level Security（RLS）を利用し、ログインユーザーが自分のデータのみ閲覧・操作できるように実装しました。
+
+### 2. CRUD機能の実装
+
+フレンド情報およびプレイ履歴について、作成・参照・更新・削除の一連の操作を実装しました。
+
+### 3. 実データによる集計機能
+
+登録されたプレイ履歴をもとに、
+
+* フレンドランキング
+* プレイ時間集計
+* ゲームランキング
+
+をリアルタイムに表示できるようにしました。
+
+---
+
+## 今後追加したい機能
+
+* セッション編集機能
+* フレンドアイコン画像アップロード
+* フレンド関係図の可視化
+* AIによるプレイ履歴要約機能
+* Googleログイン対応
+
+---

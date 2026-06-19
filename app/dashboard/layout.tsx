@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
@@ -18,6 +18,7 @@ import {
   X
 } from 'lucide-react'
 import { useState } from 'react'
+import { supabase } from '@/lib/supabase'
 
 const navigation = [
   { name: 'ダッシュボード', href: '/dashboard', icon: LayoutDashboard },
@@ -34,7 +35,13 @@ export default function DashboardLayout({
   children: React.ReactNode
 }) {
   const pathname = usePathname()
+  const router = useRouter()
   const [sidebarOpen, setSidebarOpen] = useState(false)
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut()
+    router.push('/login')
+  }
 
   return (
     <div className="min-h-screen flex bg-background">
@@ -108,10 +115,13 @@ export default function DashboardLayout({
                 <p className="text-sm font-medium truncate">ゲーマーユーザー</p>
                 <p className="text-xs text-muted-foreground truncate">プロプレイヤー</p>
               </div>
-              <Button variant="ghost" size="icon" className="flex-shrink-0" asChild>
-                <Link href="/">
-                  <LogOut className="w-4 h-4" />
-                </Link>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="flex-shrink-0"
+                onClick={handleLogout}
+              >
+                <LogOut className="w-4 h-4" />
               </Button>
             </div>
           </div>
