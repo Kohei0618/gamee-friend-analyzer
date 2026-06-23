@@ -26,11 +26,7 @@ import {
   RefreshCw
 } from 'lucide-react'
 import { 
-  getTopFriends, 
-  monthlySessionData,
-  gamesPlayedData,
   activityHeatmapData,
-  activityTimeline,
   weeklyStats
 } from '@/lib/mock-data'
 import Link from 'next/link'

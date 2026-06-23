@@ -57,7 +57,7 @@ export default function RegisterPage() {
 
     if (profileError) {
       console.error(profileError)
-      setError('プロフィール登録に失敗しました')
+      setError(`プロフィール登録に失敗しました: ${profileError.message}`)
       setIsLoading(false)
       return
     }
