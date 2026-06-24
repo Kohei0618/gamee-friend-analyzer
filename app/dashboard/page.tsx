@@ -737,7 +737,7 @@ return (
                 <Gamepad2 className="w-5 h-5 text-accent" />
                 最近のセッション
               </CardTitle>
-              <Link href="/dashboard/friends" className="text-xs text-primary hover:underline">
+              <Link href="/dashboard/sessions" className="text-xs text-primary hover:underline">
                 すべて見る
               </Link>
             </div>
