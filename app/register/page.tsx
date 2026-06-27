@@ -34,9 +34,22 @@ export default function RegisterPage() {
     const { data, error: signUpError } = await supabase.auth.signUp({
       email,
       password,
+      options: {
+        data: {
+          name: nickname,
+        },
+      },
     })
 
-    if (signUpError) {
+    console.log("signUp user:", data.user)
+
+    const {
+      data: { session },
+    } = await supabase.auth.getSession()
+
+    console.log("session:", session)
+
+if (signUpError) {
       setError(signUpError.message)
       setIsLoading(false)
       return
@@ -44,20 +57,6 @@ export default function RegisterPage() {
 
     if (!data.user) {
       setError('ユーザー登録に失敗しました')
-      setIsLoading(false)
-      return
-    }
-
-    const { error: profileError } = await supabase
-      .from('users')
-      .insert({
-        id: data.user.id,
-        name: nickname,
-      })
-
-    if (profileError) {
-      console.error(profileError)
-      setError(`プロフィール登録に失敗しました: ${profileError.message}`)
       setIsLoading(false)
       return
     }
