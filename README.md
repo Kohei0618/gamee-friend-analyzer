@@ -147,12 +147,12 @@ SupabaseのRow Level Security（RLS）を利用し、ログインユーザーが
 ---
 
 ## テスト・修正の設計および実施書
-![テスト・修正の設計及び実施書_Googleスプレッドシート](https://docs.google.com/spreadsheets/d/1ph7XaLu4a2k_kDBEpj_ySTBPETJvg5143ZMk5G90DUA/edit?gid=799863560#gid=799863560)
+[テスト・修正の設計及び実施書_Googleスプレッドシート](https://docs.google.com/spreadsheets/d/1ph7XaLu4a2k_kDBEpj_ySTBPETJvg5143ZMk5G90DUA/edit?gid=799863560#gid=799863560)
 
 ---
 
 ## アプリの改善案
-![アプリの改善案_Googleスプレッドシート](https://docs.google.com/spreadsheets/d/1fgynpBKhx8zaNkMweeYVQl52bP6Z8dJZOmmY8MHXjQM/edit?gid=0#gid=0)
+[アプリの改善案_Googleスプレッドシート](https://docs.google.com/spreadsheets/d/1fgynpBKhx8zaNkMweeYVQl52bP6Z8dJZOmmY8MHXjQM/edit?gid=0#gid=0)
 
 ---
 
